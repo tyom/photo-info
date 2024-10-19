@@ -1,0 +1,441 @@
+{
+  "Bits Per Sample": {
+    "value": 8,
+    "description": "8"
+  },
+  "Image Height": {
+    "value": 3024,
+    "description": "3024px"
+  },
+  "Image Width": {
+    "value": 4032,
+    "description": "4032px"
+  },
+  "Color Components": {
+    "value": 3,
+    "description": "3"
+  },
+  "Subsampling": {
+    "value": [
+      [1, 34, 0],
+      [2, 17, 1],
+      [3, 17, 1]
+    ],
+    "description": "YCbCr4:2:0 (2 2)"
+  },
+  "JFIF Version": {
+    "value": 257,
+    "description": "1.1"
+  },
+  "Resolution Unit": {
+    "value": 1,
+    "description": "inches"
+  },
+  "XResolution": {
+    "id": 282,
+    "value": [72, 1],
+    "description": "72"
+  },
+  "YResolution": {
+    "id": 283,
+    "value": [72, 1],
+    "description": "72"
+  },
+  "JFIF Thumbnail Width": {
+    "value": 0,
+    "description": "0px"
+  },
+  "JFIF Thumbnail Height": {
+    "value": 0,
+    "description": "0px"
+  },
+  "PhotometricInterpretation": {
+    "id": 262,
+    "value": 34892,
+    "description": 34892
+  },
+  "Make": {
+    "id": 271,
+    "value": ["Apple"],
+    "description": "Apple"
+  },
+  "Model": {
+    "id": 272,
+    "value": ["iPhone 14 Pro"],
+    "description": "iPhone 14 Pro"
+  },
+  "Orientation": {
+    "id": 274,
+    "value": 1,
+    "description": "top-left"
+  },
+  "ResolutionUnit": {
+    "id": 296,
+    "value": 2,
+    "description": "inches"
+  },
+  "Software": {
+    "id": 305,
+    "value": ["18.0.1"],
+    "description": "18.0.1"
+  },
+  "DateTime": {
+    "id": 306,
+    "value": ["2024:10:19 01:01:14"],
+    "description": "2024:10:19 01:01:14"
+  },
+  "YCbCrPositioning": {
+    "id": 531,
+    "value": 1,
+    "description": "centered"
+  },
+  "Exif IFD Pointer": {
+    "id": 34665,
+    "value": 222,
+    "description": 222
+  },
+  "GPS Info IFD Pointer": {
+    "id": 34853,
+    "value": 2596,
+    "description": 2596
+  },
+  "ExposureTime": {
+    "id": 33434,
+    "value": [1, 30],
+    "description": "1/30"
+  },
+  "FNumber": {
+    "id": 33437,
+    "value": [11, 5],
+    "description": "f/2.2"
+  },
+  "ExposureProgram": {
+    "id": 34850,
+    "value": 2,
+    "description": "Normal program"
+  },
+  "ISOSpeedRatings": {
+    "id": 34855,
+    "value": 2000,
+    "description": 2000
+  },
+  "ExifVersion": {
+    "id": 36864,
+    "value": [48, 50, 51, 50],
+    "description": "0232"
+  },
+  "DateTimeOriginal": {
+    "id": 36867,
+    "value": ["2024:10:19 01:01:14"],
+    "description": "2024:10:19 01:01:14"
+  },
+  "DateTimeDigitized": {
+    "id": 36868,
+    "value": ["2024:10:19 01:01:14"],
+    "description": "2024:10:19 01:01:14"
+  },
+  "ComponentsConfiguration": {
+    "id": 37121,
+    "value": [1, 2, 3, 0],
+    "description": ""
+  },
+  "ShutterSpeedValue": {
+    "id": 37377,
+    "value": [18193, 3698],
+    "description": "1/30"
+  },
+  "ApertureValue": {
+    "id": 37378,
+    "value": [40552, 17825],
+    "description": "2.20"
+  },
+  "BrightnessValue": {
+    "id": 37379,
+    "value": [-108780, 48679],
+    "description": "-2.2346391667864993"
+  },
+  "ExposureBiasValue": {
+    "id": 37380,
+    "value": [0, 1],
+    "description": "0"
+  },
+  "MeteringMode": {
+    "id": 37383,
+    "value": 5,
+    "description": "Pattern"
+  },
+  "Flash": {
+    "id": 37385,
+    "value": 16,
+    "description": "Flash did not fire, compulsory flash mode"
+  },
+  "FocalLength": {
+    "id": 37386,
+    "value": [1551800, 699009],
+    "description": "2.220000028611935 mm"
+  },
+  "SubjectArea": {
+    "id": 37396,
+    "value": [2012, 1511, 2217, 1330],
+    "description": "Rectangle; X: 2012, Y: 1511, width: 2217, height: 1330"
+  },
+  "SubSecTimeOriginal": {
+    "id": 37521,
+    "value": ["975"],
+    "description": "975"
+  },
+  "SubSecTimeDigitized": {
+    "id": 37522,
+    "value": ["975"],
+    "description": "975"
+  },
+  "FlashpixVersion": {
+    "id": 40960,
+    "value": [48, 49, 48, 48],
+    "description": "0100"
+  },
+  "ColorSpace": {
+    "id": 40961,
+    "value": 1,
+    "description": "sRGB"
+  },
+  "PixelXDimension": {
+    "id": 40962,
+    "value": 4032,
+    "description": 4032
+  },
+  "PixelYDimension": {
+    "id": 40963,
+    "value": 3024,
+    "description": 3024
+  },
+  "SensingMethod": {
+    "id": 41495,
+    "value": 2,
+    "description": "One-chip color area sensor"
+  },
+  "SceneType": {
+    "id": 41729,
+    "value": 1,
+    "description": "A directly photographed image"
+  },
+  "ExposureMode": {
+    "id": 41986,
+    "value": 0,
+    "description": "Auto exposure"
+  },
+  "WhiteBalance": {
+    "id": 41987,
+    "value": 0,
+    "description": "Auto white balance"
+  },
+  "FocalLengthIn35mmFilm": {
+    "id": 41989,
+    "value": 14,
+    "description": 14
+  },
+  "SceneCaptureType": {
+    "id": 41990,
+    "value": 0,
+    "description": "Standard"
+  },
+  "LensSpecification": {
+    "id": 42034,
+    "value": [
+      [1551800, 699009],
+      [9, 1],
+      [1244236, 699009],
+      [14, 5]
+    ],
+    "description": "2.22-9 mm f/2.8"
+  },
+  "LensMake": {
+    "id": 42035,
+    "value": ["Apple"],
+    "description": "Apple"
+  },
+  "LensModel": {
+    "id": 42036,
+    "value": ["iPhone 14 Pro back triple camera 2.22mm f/2.2"],
+    "description": "iPhone 14 Pro back triple camera 2.22mm f/2.2"
+  },
+  "GPSLatitudeRef": {
+    "id": 1,
+    "value": ["N"],
+    "description": "North latitude"
+  },
+  "GPSLatitude": {
+    "id": 2,
+    "value": [
+      [51, 1],
+      [30, 1],
+      [1525, 100]
+    ],
+    "description": 51.50423611111111
+  },
+  "GPSLongitudeRef": {
+    "id": 3,
+    "value": ["E"],
+    "description": "East longitude"
+  },
+  "GPSLongitude": {
+    "id": 4,
+    "value": [
+      [0, 1],
+      [2, 1],
+      [4751, 100]
+    ],
+    "description": 0.046530555555555554
+  },
+  "GPSAltitudeRef": {
+    "id": 5,
+    "value": 0,
+    "description": "Sea level"
+  },
+  "GPSAltitude": {
+    "id": 6,
+    "value": [59667, 9191],
+    "description": "6.491894244369492 m"
+  },
+  "GPSTimeStamp": {
+    "id": 7,
+    "value": [
+      [14, 1],
+      [15, 1],
+      [43, 1]
+    ],
+    "description": "14:15:43"
+  },
+  "GPSSpeedRef": {
+    "id": 12,
+    "value": ["K"],
+    "description": "Kilometers per hour"
+  },
+  "GPSSpeed": {
+    "id": 13,
+    "value": [0, 1],
+    "description": "0"
+  },
+  "GPSImgDirectionRef": {
+    "id": 16,
+    "value": ["T"],
+    "description": "True direction"
+  },
+  "GPSImgDirection": {
+    "id": 17,
+    "value": [1541061, 5138],
+    "description": "299.9340210198521"
+  },
+  "GPSDestBearingRef": {
+    "id": 23,
+    "value": ["T"],
+    "description": "True direction"
+  },
+  "GPSDestBearing": {
+    "id": 24,
+    "value": [1541061, 5138],
+    "description": "299.9340210198521"
+  },
+  "GPSDateStamp": {
+    "id": 29,
+    "value": ["2024:10:11"],
+    "description": "2024:10:11"
+  },
+  "about": {
+    "value": "",
+    "attributes": {},
+    "description": ""
+  },
+  "CreateDate": {
+    "value": "2024-10-19T01:01:14",
+    "attributes": {},
+    "description": "2024-10-19T01:01:14"
+  },
+  "CreatorTool": {
+    "value": "18.0.1",
+    "attributes": {},
+    "description": "18.0.1"
+  },
+  "ModifyDate": {
+    "value": "2024-10-19T01:01:14",
+    "attributes": {},
+    "description": "2024-10-19T01:01:14"
+  },
+  "Lens": {
+    "value": "iPhone 14 Pro back triple camera 2.22mm f/2.2",
+    "attributes": {},
+    "description": "iPhone 14 Pro back triple camera 2.22mm f/2.2"
+  },
+  "LensInfo": {
+    "value": "1551800/699009 9/1 1244236/699009 14/5",
+    "attributes": {},
+    "description": "1551800/699009 9/1 1244236/699009 14/5"
+  },
+  "DateCreated": {
+    "value": "2024-10-19T01:01:14",
+    "attributes": {},
+    "description": "2024-10-19T01:01:14"
+  },
+  "Preferred CMM type": {
+    "value": "appl",
+    "description": "Apple"
+  },
+  "Profile Version": {
+    "value": "4.0.0",
+    "description": "4.0.0"
+  },
+  "Profile/Device class": {
+    "value": "mntr",
+    "description": "Display Device profile"
+  },
+  "Color Space": {
+    "value": "RGB ",
+    "description": "RGB "
+  },
+  "Connection Space": {
+    "value": "XYZ ",
+    "description": "XYZ "
+  },
+  "ICC Profile Date": {
+    "value": "2022-01-01T00:00:00.000Z",
+    "description": "2022-01-01T00:00:00.000Z"
+  },
+  "ICC Signature": {
+    "value": "acsp",
+    "description": "acsp"
+  },
+  "Primary Platform": {
+    "value": "APPL",
+    "description": "Apple"
+  },
+  "Device Manufacturer": {
+    "value": "APPL",
+    "description": "Apple"
+  },
+  "Rendering Intent": {
+    "value": 0,
+    "description": "Perceptual"
+  },
+  "Profile Creator": {
+    "value": "appl",
+    "description": "appl"
+  },
+  "ICC Description": {
+    "value": "Display P3",
+    "description": "Display P3"
+  },
+  "ICC Copyright": {
+    "value": "Copyright Apple Inc., 2022",
+    "description": "Copyright Apple Inc., 2022"
+  },
+  "NumberOfImages": {
+    "id": 45057,
+    "value": 2,
+    "description": 2
+  },
+
+  "FileType": {
+    "value": "jpeg",
+    "description": "JPEG"
+  }
+}
