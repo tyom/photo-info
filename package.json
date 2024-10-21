@@ -5,22 +5,29 @@
   "scripts": {
     "check": "prettier --check .",
     "lint": "eslint .",
+    "format": "prettier --write . && pnpm lint --fix",
     "dev": "DEBUG=1 pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "test": "CI=1 pnpm -r test",
     "prerelease": "pnpm -r prerelease",
     "release:major": "pnpm -r release:major",
     "release:minor": "pnpm -r release:minor",
-    "release:patch": "pnpm -r release:patch"
+    "release:patch": "pnpm -r release:patch",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/node": "^22.7.7",
     "eslint": "^9.13.0",
     "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.7",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.10.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,md,json,yaml}": "pnpm format"
   }
 }
