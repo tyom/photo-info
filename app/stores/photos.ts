@@ -1,6 +1,6 @@
-import { atom } from "nanostores";
-import * as L from "leaflet";
-import { getPhotoLocationData } from "../../src";
+import { atom } from 'nanostores';
+import * as L from 'leaflet';
+import { getPhotoLocationData } from '../../src';
 
 export type Photo = {
   file: File;

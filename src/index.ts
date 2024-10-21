@@ -1,2 +1,2 @@
-export { getPhotoLocationData } from "./utils.ts";
-export { createFovMarkerSvg } from "./svg.ts";
+export { getPhotoLocationData } from './utils.ts';
+export { createFovMarkerSvg } from './svg.ts';

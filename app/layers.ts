@@ -19,9 +19,9 @@ export const tileLayers = [
   //   },
   // },
   {
-    name: "Esri Satellite",
+    name: 'Esri Satellite',
     urlTemplate:
-      "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     layerOptions: {
       attribution:
         '&copy; <a href="http://www.esri.com/">Esri</a> i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { addPhoto } from "../stores/photos";
+  import { addPhoto } from '../stores/photos';
 
   async function handleChange(e: Event) {
     const input = e.target as HTMLInputElement;

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { addPhoto, photos } from "../stores/photos";
-  import Dropzone from "svelte-file-dropzone";
-  import { flyTo } from "../stores/map";
+  import { addPhoto, photos } from '../stores/photos';
+  import Dropzone from 'svelte-file-dropzone';
+  import { flyTo } from '../stores/map';
 
   let isSidebarOpen = $state(false);
 
