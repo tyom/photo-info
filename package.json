@@ -8,7 +8,10 @@
     "dev": "DEBUG=1 pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "test": "CI=1 pnpm -r test",
-    "prerelease": "pnpm -r prerelease"
+    "prerelease": "pnpm -r prerelease",
+    "release:major": "pnpm -r release:major",
+    "release:minor": "pnpm -r release:minor",
+    "release:patch": "pnpm -r release:patch"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
