@@ -1,0 +1,1 @@
+packages/photo-info/README.md
