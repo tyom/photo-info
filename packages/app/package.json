@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prerelease": "pnpm version prerelease --preid=rc && git add package.json && git commit -m \"$(cat package.json | jq -r '.version')\" && git tag v$(cat package.json | jq -r '.version')"
   },
   "dependencies": {
     "debounce": "^2.2.0",
@@ -19,5 +20,6 @@
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@types/leaflet": "^1.9.13",
     "vite": "^5.4.8"
-  }
+  },
+  "version": "0.0.1-rc.0"
 }
