@@ -1,5 +1,5 @@
 {
-  "name": "geo-photo-app",
+  "name": "demo-app",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "debounce": "^2.2.0",
-    "geo-photo": "workspace:*",
+    "photo-info": "workspace:*",
     "leaflet": "^1.9.4",
     "nanostores": "^0.11.3",
     "svelte": "^5.0.4",

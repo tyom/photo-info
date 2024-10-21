@@ -38,15 +38,15 @@ importers:
       debounce:
         specifier: ^2.2.0
         version: 2.2.0
-      geo-photo:
-        specifier: workspace:*
-        version: link:../geo-photo
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
       nanostores:
         specifier: ^0.11.3
         version: 0.11.3
+      photo-info:
+        specifier: workspace:*
+        version: link:../photo-info
       svelte:
         specifier: ^5.0.4
         version: 5.0.4
@@ -64,7 +64,7 @@ importers:
         specifier: ^5.4.8
         version: 5.4.9(@types/node@22.7.7)
 
-  packages/geo-photo:
+  packages/photo-info:
     dependencies:
       exifreader:
         specifier: ^4.23.7

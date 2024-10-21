@@ -1,7 +1,7 @@
 import { atom, computed } from 'nanostores';
 import * as L from 'leaflet';
 import debounce from 'debounce';
-import { createFovMarkerSvg, createSimpleMarkerSvg } from 'geo-photo';
+import { createFovMarkerSvg, createSimpleMarkerSvg } from '../../photo-info';
 import { tileLayers } from '../layers';
 import { photos } from './photos';
 

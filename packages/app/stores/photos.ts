@@ -1,6 +1,6 @@
 import { atom } from 'nanostores';
 import * as L from 'leaflet';
-import { getPhotoLocationData } from 'geo-photo';
+import { getPhotoLocationData } from '../../photo-info';
 
 export type Photo = {
   file: File;
