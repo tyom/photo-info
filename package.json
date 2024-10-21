@@ -1,34 +1,21 @@
 {
-  "name": "photo-fov",
+  "name": "root",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint .",
     "check": "prettier --check .",
-    "test": "vitest"
-  },
-  "dependencies": {
-    "exifreader": "^4.23.7"
+    "lint": "eslint .",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
-    "@sveltejs/vite-plugin-svelte": "^4.0.0",
-    "@types/leaflet": "^1.9.13",
+    "@types/node": "^22.7.7",
     "eslint": "^9.13.0",
     "globals": "^15.11.0",
-    "leaflet": "^1.9.4",
-    "nanostores": "^0.11.3",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.7",
-    "svelte": "^5.0.0",
-    "svelte-file-dropzone": "^2.0.9",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.10.0",
-    "vite": "^5.4.8",
-    "vitest": "^2.1.3"
+    "typescript-eslint": "^8.10.0"
   }
 }

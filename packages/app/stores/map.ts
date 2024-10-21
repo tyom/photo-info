@@ -1,8 +1,8 @@
 import { atom, computed } from 'nanostores';
 import * as L from 'leaflet';
-import { createFovMarkerSvg } from '../../src';
+import debounce from 'debounce';
+import { createFovMarkerSvg } from 'geo-photo';
 import { tileLayers } from '../layers';
-import { debounce } from '../utils';
 import { photos } from './photos';
 
 const initialView = [51.505, -0.09] as L.LatLngTuple;
@@ -61,10 +61,10 @@ export function flyTo(location: L.LatLngTuple) {
   });
 }
 
-const debouncedMarkerUpdate = debounce((value: L.Marker[]) => {
+const debouncedMarkerUpdate = debounce((value: readonly L.Marker[]) => {
   if (value.length === 0) return;
 
-  const markerGroup = L.featureGroup(value);
+  const markerGroup = L.featureGroup([...value]);
   markerGroup.addTo(map.get()!);
   map.get()?.flyToBounds(markerGroup.getBounds(), {
     duration: 2.5, // Animation duration in seconds

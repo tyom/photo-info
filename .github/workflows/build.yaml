@@ -28,5 +28,8 @@ jobs:
       - name: Check source
         run: pnpm check && pnpm lint
 
-      - name: Build packages and run tests
+      - name: Build packages
+        run: pnpm build
+
+      - name: Test packages
         run: pnpm test

@@ -1,10 +1,10 @@
 import { test, expect, vi } from 'vitest';
 import * as ExifReader from 'exifreader';
-import mockExif14mm from '../__mocks__/exif-iphone-14-pro-14mm.json';
-import mockExif24mm from '../__mocks__/exif-iphone-14-pro-24mm.json';
-import mockExif78mm from '../__mocks__/exif-iphone-14-pro-78mm.json';
-import mockExifPortrait from '../__mocks__/exif-iphone-14-pro-portrait.json';
-import mockExifSelfie from '../__mocks__/exif-iphone-14-pro-front.json';
+import mockExif14mm from '../../../__mocks__/exif-iphone-14-pro-14mm.json';
+import mockExif24mm from '../../../__mocks__/exif-iphone-14-pro-24mm.json';
+import mockExif78mm from '../../../__mocks__/exif-iphone-14-pro-78mm.json';
+import mockExifPortrait from '../../../__mocks__/exif-iphone-14-pro-portrait.json';
+import mockExifSelfie from '../../../__mocks__/exif-iphone-14-pro-front.json';
 import {
   calculate35mmEquivalentFocalLength,
   calculateAngleOfView,
