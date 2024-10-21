@@ -4,6 +4,7 @@ import mockExif14mm from '../../../__mocks__/exif-iphone-14-pro-14mm.json';
 import mockExif24mm from '../../../__mocks__/exif-iphone-14-pro-24mm.json';
 import mockExif78mm from '../../../__mocks__/exif-iphone-14-pro-78mm.json';
 import mockExifPortrait from '../../../__mocks__/exif-iphone-14-pro-portrait.json';
+import mockExifRightTop from '../../../__mocks__/exif-iphone-x-right-top-orientation.json';
 import mockExifSelfie from '../../../__mocks__/exif-iphone-14-pro-front.json';
 import {
   calculate35mmEquivalentFocalLength,
@@ -63,6 +64,8 @@ test('returns location data for 14mm lens', async () => {
   await expect(
     getPhotoLocationData(new File([''], '14mm.jpg')),
   ).resolves.toEqual({
+    make: 'Apple',
+    model: 'iPhone 14 Pro',
     angleOfView: 102.0721,
     focalLength: 2.22,
     focalLengthIn35mm: 14,
@@ -82,6 +85,8 @@ test('returns location data for 24mm lens', async () => {
   await expect(
     getPhotoLocationData(new File([''], '24mm.jpg')),
   ).resolves.toEqual({
+    make: 'Apple',
+    model: 'iPhone 14 Pro',
     angleOfView: 71.5716,
     focalLength: 6.86,
     focalLengthIn35mm: 24,
@@ -101,6 +106,8 @@ test('returns location data for 77mm lens', async () => {
   await expect(
     getPhotoLocationData(new File([''], '77mm.jpg')),
   ).resolves.toEqual({
+    make: 'Apple',
+    model: 'iPhone 14 Pro',
     angleOfView: 24.9969,
     focalLength: 9,
     focalLengthIn35mm: 78,
@@ -113,13 +120,15 @@ test('returns location data for 77mm lens', async () => {
   });
 });
 
-test('returns correct orientation for portrait photo', async () => {
+test('returns correct orientation for portrait photo based on width and height', async () => {
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifPortrait);
 
   await expect(
     getPhotoLocationData(new File([''], 'portrait.jpg')),
   ).resolves.toEqual({
+    make: 'Apple',
+    model: 'iPhone 14 Pro',
     angleOfView: 25.3608,
     focalLength: 9,
     focalLengthIn35mm: 77,
@@ -132,6 +141,27 @@ test('returns correct orientation for portrait photo', async () => {
   });
 });
 
+test('returns correct orientation for portrait photo based on orientation tag', async () => {
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifRightTop);
+
+  await expect(
+    getPhotoLocationData(new File([''], 'portrait.jpg')),
+  ).resolves.toEqual({
+    make: 'Apple',
+    model: 'iPhone X',
+    angleOfView: 63.3907,
+    focalLength: 4,
+    focalLengthIn35mm: 28,
+    position: null,
+    bearing: null,
+    height: 3024,
+    width: 4032,
+    orientation: 'portrait',
+    frontCamera: false,
+  });
+});
+
 test('returns `frontCamera: true` for selfie', async () => {
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifSelfie);
@@ -139,6 +169,8 @@ test('returns `frontCamera: true` for selfie', async () => {
   await expect(
     getPhotoLocationData(new File([''], 'selfie.jpg')),
   ).resolves.toEqual({
+    make: 'Apple',
+    model: 'iPhone 14 Pro',
     angleOfView: 73.944,
     focalLength: 2.69,
     focalLengthIn35mm: 23,

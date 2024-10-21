@@ -29,12 +29,19 @@
     <ul>
       {#each $photos as photo}
         <li>
-          <button onclick={() => flyTo(photo.position)}>
+          <button onclick={() => photo.position && flyTo(photo.position)}>
             <img
               src={URL.createObjectURL(photo.file)}
               alt=""
               class="image-preview"
             />
+            <span class="location">
+              {#if photo.position}
+                📍
+              {:else}
+                no location data
+              {/if}
+            </span>
           </button>
         </li>
       {/each}
@@ -114,6 +121,7 @@
     border: none;
     padding: 0;
     display: flex;
+    position: relative;
   }
 
   .photo-list :global(.dropzone) {
@@ -124,5 +132,14 @@
     background: transparent;
     display: flex;
     justify-content: end;
+  }
+
+  .location {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #0009;
+    padding: 4px 8px;
+    border-top-right-radius: 8px;
   }
 </style>

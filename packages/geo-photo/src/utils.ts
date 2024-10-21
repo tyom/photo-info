@@ -1,5 +1,7 @@
 import * as ExifReader from 'exifreader';
 
+const isDebugging = ['1', 'true'].includes(process.env.DEBUG ?? '');
+
 /**
  * Calculate sensor diagonal from width and height. Defaults to 36mm x 24mm (full frame).
  * @param [width = 36]
@@ -124,22 +126,38 @@ export async function getPhotoLocationData(file: File) {
   const focalLengthIn35mm = tags['FocalLengthIn35mmFilm']?.value as number;
   const width = tags['Image Width']?.value as number;
   const height = tags['Image Height']?.value as number;
-  const frontCamera = (tags['Lens']?.value as string)?.includes(' front ');
+  const frontCamera = !!(tags['Lens']?.value as string)?.includes(' front ');
+  const portraitOrientation = ['right-top', 'left-top'].includes(
+    tags['Orientation']?.description ?? '',
+  );
+  const make = tags['Make']?.description ?? null;
+  const model = tags['Model']?.description ?? null;
 
   if (width === height) {
     orientation = 'square';
-  } else if (height > width) {
+  } else if (height > width || portraitOrientation) {
     orientation = 'portrait';
   }
-  return {
+
+  const result = {
+    make,
+    model,
     angleOfView: calculateAngleOfView(focalLength, focalLengthIn35mm),
     focalLength: parseFloat(focalLength.toFixed(2)),
     focalLengthIn35mm,
-    position: [latitude, longitude] as Position,
+    position:
+      latitude && longitude ? ([latitude, longitude] as Position) : null,
     bearing,
     width,
     height,
     orientation,
     frontCamera,
   };
+
+  if (isDebugging) {
+    console.log('EXIF data', tags);
+    console.log('Extracted data', result);
+  }
+
+  return result;
 }

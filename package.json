@@ -5,8 +5,9 @@
   "scripts": {
     "check": "prettier --check .",
     "lint": "eslint .",
+    "dev": "DEBUG=1 pnpm -r --parallel dev",
     "build": "pnpm -r build",
-    "test": "pnpm -r test"
+    "test": "CI=1 pnpm -r test"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

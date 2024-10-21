@@ -1,7 +1,7 @@
 import { atom, computed } from 'nanostores';
 import * as L from 'leaflet';
 import debounce from 'debounce';
-import { createFovMarkerSvg } from 'geo-photo';
+import { createFovMarkerSvg, createSimpleMarkerSvg } from 'geo-photo';
 import { tileLayers } from '../layers';
 import { photos } from './photos';
 
@@ -9,7 +9,9 @@ const initialView = [51.505, -0.09] as L.LatLngTuple;
 const initialZoom = 14;
 
 export const map = atom<L.Map | null>(null);
-export const markers = computed(photos, (photos) => photos.map(createMarker));
+export const markers = computed(photos, (photos) =>
+  photos.filter((p) => !!p.position).map(createMarker),
+);
 
 export function createMap(container: HTMLDivElement) {
   const m = L.map(container, { preferCanvas: true }).setView(
@@ -39,13 +41,12 @@ export function createMarker({
   bearing,
   size = 300,
 }: MakerOptions) {
-  if (!angleOfView || !bearing) {
-    throw new Error('Angle of view and bearing are required');
-  }
-
   const icon = L.divIcon({
     className: 'fov-marker',
-    html: createFovMarkerSvg(angleOfView, bearing, size),
+    html:
+      angleOfView && bearing
+        ? createFovMarkerSvg(angleOfView, bearing, size)
+        : createSimpleMarkerSvg(size / 10),
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   });

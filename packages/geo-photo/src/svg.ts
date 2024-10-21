@@ -35,3 +35,11 @@ export function createFovMarkerSvg(
     </svg>
     `;
 }
+
+export function createSimpleMarkerSvg(size = 10) {
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle cx="0" cy="0" r="${size / 2}" fill="blue" stroke="white" stroke-width="2"/>
+    </svg>
+  `;
+}

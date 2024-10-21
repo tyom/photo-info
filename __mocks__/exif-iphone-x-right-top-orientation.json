@@ -1,0 +1,459 @@
+{
+  "Bits Per Sample": {
+    "value": 8,
+    "description": "8"
+  },
+  "Image Height": {
+    "value": 3024,
+    "description": "3024px"
+  },
+  "Image Width": {
+    "value": 4032,
+    "description": "4032px"
+  },
+  "Color Components": {
+    "value": 3,
+    "description": "3"
+  },
+  "Subsampling": {
+    "value": [
+      [1, 34, 0],
+      [2, 17, 1],
+      [3, 17, 1]
+    ],
+    "description": "YCbCr4:2:0 (2 2)"
+  },
+  "Make": {
+    "id": 271,
+    "value": ["Apple"],
+    "description": "Apple"
+  },
+  "Model": {
+    "id": 272,
+    "value": ["iPhone X"],
+    "description": "iPhone X"
+  },
+  "Orientation": {
+    "id": 274,
+    "value": 6,
+    "description": "right-top"
+  },
+  "XResolution": {
+    "id": 282,
+    "value": [72, 1],
+    "description": "72"
+  },
+  "YResolution": {
+    "id": 283,
+    "value": [72, 1],
+    "description": "72"
+  },
+  "ResolutionUnit": {
+    "id": 296,
+    "value": 2,
+    "description": "inches"
+  },
+  "Software": {
+    "id": 305,
+    "value": ["12.3.1"],
+    "description": "12.3.1"
+  },
+  "DateTime": {
+    "id": 306,
+    "value": ["2019:08:06 16:56:17"],
+    "description": "2019:08:06 16:56:17"
+  },
+  "YCbCrPositioning": {
+    "id": 531,
+    "value": 1,
+    "description": "centered"
+  },
+  "Exif IFD Pointer": {
+    "id": 34665,
+    "value": 194,
+    "description": 194
+  },
+  "ExposureTime": {
+    "id": 33434,
+    "value": [1, 20],
+    "description": "1/20"
+  },
+  "FNumber": {
+    "id": 33437,
+    "value": [9, 5],
+    "description": "f/1.8"
+  },
+  "ExposureProgram": {
+    "id": 34850,
+    "value": 2,
+    "description": "Normal program"
+  },
+  "ISOSpeedRatings": {
+    "id": 34855,
+    "value": 32,
+    "description": 32
+  },
+  "ExifVersion": {
+    "id": 36864,
+    "value": [48, 50, 50, 49],
+    "description": "0221"
+  },
+  "DateTimeOriginal": {
+    "id": 36867,
+    "value": ["2019:08:06 16:56:17"],
+    "description": "2019:08:06 16:56:17"
+  },
+  "DateTimeDigitized": {
+    "id": 36868,
+    "value": ["2019:08:06 16:56:17"],
+    "description": "2019:08:06 16:56:17"
+  },
+  "OffsetTime": {
+    "id": 36880,
+    "value": ["+02:00"],
+    "description": "+02:00"
+  },
+  "OffsetTimeOriginal": {
+    "id": 36881,
+    "value": ["+02:00"],
+    "description": "+02:00"
+  },
+  "OffsetTimeDigitized": {
+    "id": 36882,
+    "value": ["+02:00"],
+    "description": "+02:00"
+  },
+  "ComponentsConfiguration": {
+    "id": 37121,
+    "value": [1, 2, 3, 0],
+    "description": ""
+  },
+  "ShutterSpeedValue": {
+    "id": 37377,
+    "value": [63107, 14601],
+    "description": "1/20"
+  },
+  "ApertureValue": {
+    "id": 37378,
+    "value": [54823, 32325],
+    "description": "1.80"
+  },
+  "BrightnessValue": {
+    "id": 37379,
+    "value": [125734, 41099],
+    "description": "3.059295846614273"
+  },
+  "ExposureBiasValue": {
+    "id": 37380,
+    "value": [0, 1],
+    "description": "0"
+  },
+  "MeteringMode": {
+    "id": 37383,
+    "value": 5,
+    "description": "Pattern"
+  },
+  "Flash": {
+    "id": 37385,
+    "value": 16,
+    "description": "Flash did not fire, compulsory flash mode"
+  },
+  "FocalLength": {
+    "id": 37386,
+    "value": [4, 1],
+    "description": "4 mm"
+  },
+  "SubjectArea": {
+    "id": 37396,
+    "value": [1648, 1418, 314, 314],
+    "description": "Rectangle; X: 1648, Y: 1418, width: 314, height: 314"
+  },
+  "SubSecTime": {
+    "id": 37520,
+    "value": ["378"],
+    "description": "378"
+  },
+  "SubSecTimeOriginal": {
+    "id": 37521,
+    "value": ["378"],
+    "description": "378"
+  },
+  "SubSecTimeDigitized": {
+    "id": 37522,
+    "value": ["378"],
+    "description": "378"
+  },
+  "FlashpixVersion": {
+    "id": 40960,
+    "value": [48, 49, 48, 48],
+    "description": "0100"
+  },
+  "ColorSpace": {
+    "id": 40961,
+    "value": 65535,
+    "description": "Uncalibrated"
+  },
+  "PixelXDimension": {
+    "id": 40962,
+    "value": 4032,
+    "description": 4032
+  },
+  "PixelYDimension": {
+    "id": 40963,
+    "value": 3024,
+    "description": 3024
+  },
+  "SensingMethod": {
+    "id": 41495,
+    "value": 2,
+    "description": "One-chip color area sensor"
+  },
+  "SceneType": {
+    "id": 41729,
+    "value": 1,
+    "description": "A directly photographed image"
+  },
+  "ExposureMode": {
+    "id": 41986,
+    "value": 0,
+    "description": "Auto exposure"
+  },
+  "WhiteBalance": {
+    "id": 41987,
+    "value": 0,
+    "description": "Auto white balance"
+  },
+  "FocalLengthIn35mmFilm": {
+    "id": 41989,
+    "value": 28,
+    "description": 28
+  },
+  "SceneCaptureType": {
+    "id": 41990,
+    "value": 0,
+    "description": "Standard"
+  },
+  "LensSpecification": {
+    "id": 42034,
+    "value": [
+      [4, 1],
+      [6, 1],
+      [9, 5],
+      [12, 5]
+    ],
+    "description": "4-6 mm f/2.4"
+  },
+  "LensMake": {
+    "id": 42035,
+    "value": ["Apple"],
+    "description": "Apple"
+  },
+  "LensModel": {
+    "id": 42036,
+    "value": ["iPhone X back dual camera 4mm f/1.8"],
+    "description": "iPhone X back dual camera 4mm f/1.8"
+  },
+  "Coded Character Set": {
+    "id": 346,
+    "value": [27, 37, 71],
+    "description": "UTF-8"
+  },
+  "Record Version": {
+    "id": 512,
+    "value": [0, 2],
+    "description": "2"
+  },
+  "Time Created": {
+    "id": 572,
+    "value": [49, 54, 53, 54, 49, 55, 43, 48, 50, 48, 48],
+    "description": "16:56:17+02:00"
+  },
+  "Date Created": {
+    "id": 567,
+    "value": [50, 48, 49, 57, 45, 48, 56, 45, 48, 54],
+    "description": "2019--0-8-"
+  },
+  "about": {
+    "value": "",
+    "attributes": {},
+    "description": ""
+  },
+  "CreateDate": {
+    "value": "2019-08-06T16:56:17",
+    "attributes": {},
+    "description": "2019-08-06T16:56:17"
+  },
+  "CreatorTool": {
+    "value": "12.3.1",
+    "attributes": {},
+    "description": "12.3.1"
+  },
+  "ModifyDate": {
+    "value": "2019-08-06T16:56:17",
+    "attributes": {},
+    "description": "2019-08-06T16:56:17"
+  },
+  "Regions": {
+    "value": {
+      "RegionList": {
+        "value": [
+          {
+            "Area": {
+              "value": {
+                "y": {
+                  "value": "0.47050000000000003",
+                  "attributes": {},
+                  "description": "0.47050000000000003"
+                },
+                "w": {
+                  "value": "0.075000000000000011",
+                  "attributes": {},
+                  "description": "0.075000000000000011"
+                },
+                "x": {
+                  "value": "0.40949999999999998",
+                  "attributes": {},
+                  "description": "0.40949999999999998"
+                },
+                "h": {
+                  "value": "0.10100000000000003",
+                  "attributes": {},
+                  "description": "0.10100000000000003"
+                },
+                "unit": {
+                  "value": "normalized",
+                  "attributes": {},
+                  "description": "normalized"
+                }
+              },
+              "attributes": {},
+              "description": "y: 0.47050000000000003; w: 0.075000000000000011; x: 0.40949999999999998; h: 0.10100000000000003; unit: normalized"
+            },
+            "Type": {
+              "value": "Face",
+              "attributes": {},
+              "description": "Face"
+            },
+            "Extensions": {
+              "value": {
+                "AngleInfoYaw": {
+                  "value": "0",
+                  "attributes": {},
+                  "description": "0"
+                },
+                "AngleInfoRoll": {
+                  "value": "270",
+                  "attributes": {},
+                  "description": "270"
+                },
+                "ConfidenceLevel": {
+                  "value": "675",
+                  "attributes": {},
+                  "description": "675"
+                },
+                "Timestamp": {
+                  "value": "2147483647",
+                  "attributes": {},
+                  "description": "2147483647"
+                },
+                "FaceID": {
+                  "value": "1",
+                  "attributes": {},
+                  "description": "1"
+                }
+              },
+              "attributes": {},
+              "description": "AngleInfoYaw: 0; AngleInfoRoll: 270; ConfidenceLevel: 675; Timestamp: 2147483647; FaceID: 1"
+            }
+          }
+        ],
+        "attributes": {},
+        "description": "Area: y: 0.47050000000000003; w: 0.075000000000000011; x: 0.40949999999999998; h: 0.10100000000000003; unit: normalized; Type: Face; Extensions: AngleInfoYaw: 0; AngleInfoRoll: 270; ConfidenceLevel: 675; Timestamp: 2147483647; FaceID: 1"
+      },
+      "AppliedToDimensions": {
+        "value": {
+          "h": {
+            "value": "3024",
+            "attributes": {},
+            "description": "3024"
+          },
+          "w": {
+            "value": "4032",
+            "attributes": {},
+            "description": "4032"
+          },
+          "unit": {
+            "value": "pixel",
+            "attributes": {},
+            "description": "pixel"
+          }
+        },
+        "attributes": {},
+        "description": "h: 3024; w: 4032; unit: pixel"
+      }
+    },
+    "attributes": {},
+    "description": "RegionList: Area: y: 0.47050000000000003; w: 0.075000000000000011; x: 0.40949999999999998; h: 0.10100000000000003; unit: normalized; Type: Face; Extensions: AngleInfoYaw: 0; AngleInfoRoll: 270; ConfidenceLevel: 675; Timestamp: 2147483647; FaceID: 1; AppliedToDimensions: h: 3024; w: 4032; unit: pixel"
+  },
+  "DateCreated": {
+    "value": "2019-08-06T16:56:17+02:00",
+    "attributes": {},
+    "description": "2019-08-06T16:56:17+02:00"
+  },
+  "Preferred CMM type": {
+    "value": "appl",
+    "description": "Apple"
+  },
+  "Profile Version": {
+    "value": "4.0.0",
+    "description": "4.0.0"
+  },
+  "Profile/Device class": {
+    "value": "mntr",
+    "description": "Display Device profile"
+  },
+  "Color Space": {
+    "value": "RGB ",
+    "description": "RGB "
+  },
+  "Connection Space": {
+    "value": "XYZ ",
+    "description": "XYZ "
+  },
+  "ICC Profile Date": {
+    "value": "2022-01-01T00:00:00.000Z",
+    "description": "2022-01-01T00:00:00.000Z"
+  },
+  "ICC Signature": {
+    "value": "acsp",
+    "description": "acsp"
+  },
+  "Primary Platform": {
+    "value": "APPL",
+    "description": "Apple"
+  },
+  "Device Manufacturer": {
+    "value": "APPL",
+    "description": "Apple"
+  },
+  "Rendering Intent": {
+    "value": 0,
+    "description": "Perceptual"
+  },
+  "Profile Creator": {
+    "value": "appl",
+    "description": "appl"
+  },
+  "ICC Description": {
+    "value": "Display P3",
+    "description": "Display P3"
+  },
+  "ICC Copyright": {
+    "value": "Copyright Apple Inc., 2022",
+    "description": "Copyright Apple Inc., 2022"
+  },
+  "FileType": {
+    "value": "jpeg",
+    "description": "JPEG"
+  }
+}
