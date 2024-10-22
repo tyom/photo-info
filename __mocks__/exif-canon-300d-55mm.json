@@ -1,0 +1,268 @@
+{
+  "Bits Per Sample": {
+    "value": 8,
+    "description": "8"
+  },
+  "Image Height": {
+    "value": 2048,
+    "description": "2048px"
+  },
+  "Image Width": {
+    "value": 3072,
+    "description": "3072px"
+  },
+  "Color Components": {
+    "value": 3,
+    "description": "3"
+  },
+  "Subsampling": {
+    "value": [
+      [1, 34, 0],
+      [2, 17, 1],
+      [3, 17, 1]
+    ],
+    "description": "YCbCr4:2:0 (2 2)"
+  },
+  "JFIF Version": {
+    "value": 257,
+    "description": "1.1"
+  },
+  "Resolution Unit": {
+    "value": 0,
+    "description": "None"
+  },
+  "XResolution": {
+    "id": 282,
+    "value": [72, 1],
+    "description": "72"
+  },
+  "YResolution": {
+    "id": 283,
+    "value": [72, 1],
+    "description": "72"
+  },
+  "JFIF Thumbnail Width": {
+    "value": 0,
+    "description": "0px"
+  },
+  "JFIF Thumbnail Height": {
+    "value": 0,
+    "description": "0px"
+  },
+  "Make": {
+    "id": 271,
+    "value": ["Canon"],
+    "description": "Canon"
+  },
+  "Model": {
+    "id": 272,
+    "value": ["Canon EOS 300D DIGITAL"],
+    "description": "Canon EOS 300D DIGITAL"
+  },
+  "Orientation": {
+    "id": 274,
+    "value": 1,
+    "description": "top-left"
+  },
+  "Software": {
+    "id": 305,
+    "value": ["Photos 1.5"],
+    "description": "Photos 1.5"
+  },
+  "DateTime": {
+    "id": 306,
+    "value": ["2008:05:16 16:42:00"],
+    "description": "2008:05:16 16:42:00"
+  },
+  "Exif IFD Pointer": {
+    "id": 34665,
+    "value": 188,
+    "description": 188
+  },
+  "ExposureTime": {
+    "id": 33434,
+    "value": [1, 160],
+    "description": "1/160"
+  },
+  "FNumber": {
+    "id": 33437,
+    "value": [16, 1],
+    "description": "f/16"
+  },
+  "ExposureProgram": {
+    "id": 34850,
+    "value": 4,
+    "description": "Shutter priority"
+  },
+  "ISOSpeedRatings": {
+    "id": 34855,
+    "value": 200,
+    "description": 200
+  },
+  "DateTimeOriginal": {
+    "id": 36867,
+    "value": ["2008:05:16 16:42:00"],
+    "description": "2008:05:16 16:42:00"
+  },
+  "DateTimeDigitized": {
+    "id": 36868,
+    "value": ["2008:05:16 16:42:00"],
+    "description": "2008:05:16 16:42:00"
+  },
+  "ShutterSpeedValue": {
+    "id": 37377,
+    "value": [4708, 643],
+    "description": "1/160"
+  },
+  "ApertureValue": {
+    "id": 37378,
+    "value": [8, 1],
+    "description": "16.00"
+  },
+  "ExposureBiasValue": {
+    "id": 37380,
+    "value": [-2, 3],
+    "description": "-0.6666666666666666"
+  },
+  "MaxApertureValue": {
+    "id": 37381,
+    "value": [1371, 245],
+    "description": "6.95"
+  },
+  "MeteringMode": {
+    "id": 37383,
+    "value": 5,
+    "description": "Pattern"
+  },
+  "Flash": {
+    "id": 37385,
+    "value": 0,
+    "description": "Flash did not fire"
+  },
+  "FocalLength": {
+    "id": 37386,
+    "value": [55, 1],
+    "description": "55 mm"
+  },
+  "PixelXDimension": {
+    "id": 40962,
+    "value": 3072,
+    "description": 3072
+  },
+  "PixelYDimension": {
+    "id": 40963,
+    "value": 2048,
+    "description": 2048
+  },
+  "about": {
+    "value": "",
+    "attributes": {},
+    "description": ""
+  },
+  "ModifyDate": {
+    "value": "2008-05-16T16:42:00",
+    "attributes": {},
+    "description": "2008-05-16T16:42:00"
+  },
+  "CreatorTool": {
+    "value": "Photos 1.5",
+    "attributes": {},
+    "description": "Photos 1.5"
+  },
+  "CreateDate": {
+    "value": "2008-05-16T16:42:00",
+    "attributes": {},
+    "description": "2008-05-16T16:42:00"
+  },
+  "Lens": {
+    "value": " 18.0-55.0mm",
+    "attributes": {},
+    "description": " 18.0-55.0mm"
+  },
+  "Firmware": {
+    "value": "1.1.1",
+    "attributes": {},
+    "description": "1.1.1"
+  },
+  "ImageNumber": {
+    "value": "1444446",
+    "attributes": {},
+    "description": "1444446"
+  },
+  "SerialNumber": {
+    "value": "1830513087",
+    "attributes": {},
+    "description": "1830513087"
+  },
+  "FlashCompensation": {
+    "value": "0/1",
+    "attributes": {},
+    "description": "0/1"
+  },
+  "LensInfo": {
+    "value": "18/1 55/1 0/0 0/0",
+    "attributes": {},
+    "description": "18/1 55/1 0/0 0/0"
+  },
+  "DateCreated": {
+    "value": "2008-05-16T16:42:00",
+    "attributes": {},
+    "description": "2008-05-16T16:42:00"
+  },
+  "Preferred CMM type": {
+    "value": "appl",
+    "description": "Apple"
+  },
+  "Profile Version": {
+    "value": "4.0.0",
+    "description": "4.0.0"
+  },
+  "Profile/Device class": {
+    "value": "mntr",
+    "description": "Display Device profile"
+  },
+  "Color Space": {
+    "value": "RGB ",
+    "description": "RGB "
+  },
+  "Connection Space": {
+    "value": "XYZ ",
+    "description": "XYZ "
+  },
+  "ICC Profile Date": {
+    "value": "2015-10-14T13:08:57.000Z",
+    "description": "2015-10-14T13:08:57.000Z"
+  },
+  "ICC Signature": {
+    "value": "acsp",
+    "description": "acsp"
+  },
+  "Primary Platform": {
+    "value": "APPL",
+    "description": "Apple"
+  },
+  "Device Manufacturer": {
+    "value": "APPL",
+    "description": "Apple"
+  },
+  "Rendering Intent": {
+    "value": 0,
+    "description": "Perceptual"
+  },
+  "Profile Creator": {
+    "value": "appl",
+    "description": "appl"
+  },
+  "ICC Description": {
+    "value": "Display P3",
+    "description": "Display P3"
+  },
+  "ICC Copyright": {
+    "value": "Copyright Apple Inc.",
+    "description": "Copyright Apple Inc."
+  },
+  "FileType": {
+    "value": "jpeg",
+    "description": "JPEG"
+  }
+}

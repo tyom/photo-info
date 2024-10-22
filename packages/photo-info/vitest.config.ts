@@ -7,4 +7,7 @@ export default defineConfig({
       '@mocks': path.resolve(__dirname, '../../__mocks__'),
     },
   },
+  test: {
+    unstubEnvs: true,
+  },
 });

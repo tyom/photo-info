@@ -1,6 +1,4 @@
-import * as ExifReader from 'exifreader';
-
-const isDebugging = ['1', 'true'].includes(process.env.DEBUG ?? '');
+export const isDebugging = ['1', 'true'].includes(process.env.DEBUG_LIB ?? '');
 
 /**
  * Calculate sensor diagonal from width and height. Defaults to 36mm x 24mm (full frame).
@@ -78,9 +76,14 @@ export function calculate35mmEquivalentFocalLength(
  */
 export function calculateAngleOfView(
   focalLength: number,
-  focalLengthIn35mm: number,
+  focalLengthIn35mm?: number,
 ) {
-  const { width } = calculateSensorSize(focalLengthIn35mm, focalLength);
+  // Calculate the sensor width on 35mm focal length equivalent if available
+  // Otherwise, use the actual focal length
+  const { width } = calculateSensorSize(
+    focalLengthIn35mm ?? focalLength,
+    focalLength,
+  );
 
   const fov = 2 * Math.atan(width / (2 * focalLength));
   const fovDegrees = fov * (180 / Math.PI);
@@ -88,76 +91,10 @@ export function calculateAngleOfView(
   return parseFloat(fovDegrees.toFixed(4));
 }
 
-const divideArrayItems = (items: number[]) => items.reduce((a, c) => a / c);
-
-type Latitude = number;
-type Longitude = number;
-type Altitude = number;
-type Position = [Latitude, Longitude, Altitude?];
-
 /**
- * Get the location information from the EXIF data of a photo.
- * @param file
+ * Divides all items in an array by the first item.
+ * @param items - array of numbers
+ * @param precision - number of decimal places to round to
  */
-export async function getPhotoLocationData(file: File) {
-  const tags = await ExifReader.load(file);
-
-  let longitude: number | null = null;
-  let latitude: number | null = null;
-  let bearing: number | null = null;
-  let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
-
-  if ('GPSLongitude' in tags) {
-    const lonRef =
-      (tags['GPSLongitudeRef']?.value as string[])[0] === 'E' ? 1 : -1;
-    const latRef =
-      (tags['GPSLatitudeRef']?.value as string[])[0] === 'N' ? 1 : -1;
-    longitude =
-      (tags['GPSLongitude']?.description as unknown as number) * lonRef;
-    latitude = (tags['GPSLatitude']?.description as unknown as number) * latRef;
-    bearing = divideArrayItems(tags['GPSImgDirection']?.value as number[]);
-
-    bearing = parseFloat(bearing.toFixed(2));
-    latitude = parseFloat(latitude.toFixed(7));
-    longitude = parseFloat(longitude.toFixed(7));
-  }
-
-  const focalLength = divideArrayItems(tags['FocalLength']?.value as number[]);
-  const focalLengthIn35mm = tags['FocalLengthIn35mmFilm']?.value as number;
-  const width = tags['Image Width']?.value as number;
-  const height = tags['Image Height']?.value as number;
-  const frontCamera = !!(tags['Lens']?.value as string)?.includes(' front ');
-  const portraitOrientation = ['right-top', 'left-top'].includes(
-    tags['Orientation']?.description ?? '',
-  );
-  const make = tags['Make']?.description ?? null;
-  const model = tags['Model']?.description ?? null;
-
-  if (width === height) {
-    orientation = 'square';
-  } else if (height > width || portraitOrientation) {
-    orientation = 'portrait';
-  }
-
-  const result = {
-    make,
-    model,
-    angleOfView: calculateAngleOfView(focalLength, focalLengthIn35mm),
-    focalLength: parseFloat(focalLength.toFixed(2)),
-    focalLengthIn35mm,
-    position:
-      latitude && longitude ? ([latitude, longitude] as Position) : null,
-    bearing,
-    width,
-    height,
-    orientation,
-    frontCamera,
-  };
-
-  if (isDebugging) {
-    console.log('EXIF data', tags);
-    console.log('Extracted data', result);
-  }
-
-  return result;
-}
+export const divideArrayItems = (items: number[], precision = 4) =>
+  parseFloat(items.reduce((a, c) => a / c).toFixed(precision));
