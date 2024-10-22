@@ -76,7 +76,7 @@ export function calculate35mmEquivalentFocalLength(
  */
 export function calculateAngleOfView(
   focalLength: number,
-  focalLengthIn35mm?: number,
+  focalLengthIn35mm?: number | null,
 ) {
   // Calculate the sensor width on 35mm focal length equivalent if available
   // Otherwise, use the actual focal length

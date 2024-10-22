@@ -10,65 +10,135 @@ type Longitude = number;
 type Altitude = number;
 type Position = [Latitude, Longitude, Altitude?];
 
-/**
- * Get the location information from the EXIF data of a photo.
- * @param file
- */
-export async function getPhotoLocationData(file: File) {
+type ExifTagName = keyof ExifReader.Tags;
+type ExifTag = ExifReader.Tags[ExifTagName];
+
+async function parseExifData(file: File) {
   const tags = await ExifReader.load(file);
 
-  let longitude: number | null = null;
-  let latitude: number | null = null;
-  let bearing: number | null = null;
-  let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
+  function getExifValue<
+    K extends keyof ExifTag = keyof ExifTag,
+    V = ExifTag[K],
+  >(
+    tagName: ExifTagName,
+    key: K,
+    transformer?: (value: ExifTag[K] | number[]) => V,
+  ): V | null {
+    const tag = tags[tagName];
 
-  // const lon = getExifValue(tags, 'GPSLongitude', (value) => value * 1);
+    if (tag === undefined) {
+      return null;
+    }
 
-  if ('GPSLongitude' in tags) {
-    const lonRef =
-      (tags['GPSLongitudeRef']?.value as string[])[0] === 'E' ? 1 : -1;
-    const latRef =
-      (tags['GPSLatitudeRef']?.value as string[])[0] === 'N' ? 1 : -1;
-    longitude =
-      (tags['GPSLongitude']?.description as unknown as number) * lonRef;
-    latitude = (tags['GPSLatitude']?.description as unknown as number) * latRef;
-    bearing = divideArrayItems(tags['GPSImgDirection']?.value as number[]);
+    const value = tag[key];
 
-    bearing = parseFloat(bearing.toFixed(2));
-    latitude = parseFloat(latitude.toFixed(7));
-    longitude = parseFloat(longitude.toFixed(7));
+    if (transformer) {
+      return transformer(value);
+    }
+
+    return value as V;
   }
 
-  const focalLength = divideArrayItems(tags['FocalLength']?.value as number[]);
-  const focalLengthIn35mm = tags['FocalLengthIn35mmFilm']?.value as number;
-  const width = tags['Image Width']?.value as number;
-  const height = tags['Image Height']?.value as number;
-  const frontCamera = !!(tags['Lens']?.value as string)?.includes(' front ');
-  const portraitOrientation = ['right-top', 'left-top'].includes(
-    tags['Orientation']?.description ?? '',
-  );
-  const make = tags['Make']?.description ?? null;
-  const model = tags['Model']?.description ?? null;
+  /**
+   * Get the position of the photo from the EXIF data.
+   * @returns The position of the photo as a [latitude, longitude] tuple.
+   */
+  function getPosition() {
+    if ('GPSLatitude' in tags && 'GPSLongitude' in tags) {
+      // West longitude is negative
+      const lonRef = getExifValue('GPSLongitudeRef', 'value', (v) =>
+        v[0] === 'E' ? 1 : -1,
+      );
+      // South latitude is negative
+      const latRef = getExifValue('GPSLatitudeRef', 'value', (v) =>
+        v[0] === 'N' ? 1 : -1,
+      );
+      const longitude = getExifValue(
+        'GPSLongitude',
+        'description',
+        (long) => +long * lonRef!,
+      );
+      const latitude = getExifValue(
+        'GPSLatitude',
+        'description',
+        (lat) => +lat * latRef!,
+      );
 
+      if (typeof longitude !== 'number' || typeof latitude !== 'number') {
+        return null;
+      }
+
+      return [
+        parseFloat(latitude.toFixed(7)),
+        parseFloat(longitude.toFixed(7)),
+      ] as Position;
+    }
+
+    return null;
+  }
+
+  return {
+    tags,
+    gpsPosition: getPosition(),
+    getExifValue,
+  };
+}
+
+/**
+ * Get the location information from the EXIF data of a photo.
+ * @param file - image file with EXIF data
+ */
+export async function getPhotoInfo(file: File) {
+  const { tags, gpsPosition, getExifValue } = await parseExifData(file);
+
+  const bearing = getExifValue('GPSImgDirection', 'description', (degrees) =>
+    parseFloat((+degrees).toFixed(2)),
+  );
+  const focalLength = getExifValue('FocalLength', 'value', (value) =>
+    divideArrayItems(value as number[]),
+  )!;
+  const focalLengthIn35mm = getExifValue(
+    'FocalLengthIn35mmFilm',
+    'value',
+  ) as number;
+  const width = getExifValue('Image Width', 'value')!;
+  const height = getExifValue('Image Height', 'value')!;
+  const frontCamera = !!getExifValue('Lens', 'value')?.includes(' front ');
+  const imageOrientation = ['right-top', 'left-top'].includes(
+    getExifValue('Orientation', 'description') ?? '',
+  );
+
+  let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
   if (width === height) {
     orientation = 'square';
-  } else if (height > width || portraitOrientation) {
+  } else if (height > width || imageOrientation) {
     orientation = 'portrait';
   }
 
   const result = {
-    make,
-    model,
+    make: getExifValue('Make', 'description'),
+    model: getExifValue('Model', 'description'),
     angleOfView: calculateAngleOfView(focalLength, focalLengthIn35mm),
     focalLength: parseFloat(focalLength.toFixed(2)),
     focalLengthIn35mm,
-    position:
-      latitude && longitude ? ([latitude, longitude] as Position) : null,
+    gpsPosition,
+    gpsSpeed: getExifValue('GPSSpeed', 'value', (value) =>
+      divideArrayItems(value as number[]),
+    ),
+    gpsAltitude: getExifValue('GPSAltitude', 'value', (value) =>
+      divideArrayItems(value as number[]),
+    ),
     bearing,
     width,
     height,
     orientation,
     frontCamera,
+    exposureTime: getExifValue('ExposureTime', 'description'),
+    exposureProgram: getExifValue('ExposureProgram', 'description'),
+    fNumber: getExifValue('FNumber', 'description'),
+    lens:
+      getExifValue('Lens', 'value') ?? getExifValue('LensModel', 'description'),
+    dateTime: getExifValue('CreateDate', 'value'),
   };
 
   if (isDebugging) {

@@ -10,7 +10,7 @@ const initialZoom = 14;
 
 export const map = atom<L.Map | null>(null);
 export const markers = computed(photos, (photos) =>
-  photos.filter((p) => !!p.position).map(createMarker),
+  photos.filter((p) => !!p.gpsPosition).map(createMarker),
 );
 
 export function createMap(container: HTMLDivElement) {
@@ -29,14 +29,14 @@ export function createMap(container: HTMLDivElement) {
 }
 
 type MakerOptions = {
-  position: L.LatLngTuple;
+  gpsPosition: L.LatLngTuple;
   angleOfView?: number | null;
   bearing?: number | null;
   size?: number;
 };
 
 export function createMarker({
-  position,
+  gpsPosition,
   angleOfView,
   bearing,
   size = 300,
@@ -51,7 +51,7 @@ export function createMarker({
     iconAnchor: [size / 2, size / 2],
   });
 
-  return L.marker(position, { icon });
+  return L.marker(gpsPosition, { icon });
 }
 
 export function flyTo(location: L.LatLngTuple) {

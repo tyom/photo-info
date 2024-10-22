@@ -1,22 +1,22 @@
 import { atom } from 'nanostores';
 import * as L from 'leaflet';
-import { getPhotoLocationData } from 'photo-info';
+import { getPhotoInfo } from 'photo-info';
 
 export type Photo = {
   file: File;
   angleOfView: number | null;
   bearing: number | null;
-  position: null;
+  gpsPosition: null;
 };
 
-export type PhotoWithLocation = Omit<Photo, 'position'> & {
-  position: L.LatLngTuple;
+export type PhotoWithLocation = Omit<Photo, 'gpsPosition'> & {
+  gpsPosition: L.LatLngTuple;
 };
 
 export const photos = atom<(Photo | PhotoWithLocation)[]>([]);
 
 export async function addPhoto(file: File) {
-  const { angleOfView, bearing, position } = await getPhotoLocationData(file);
+  const { angleOfView, bearing, gpsPosition } = await getPhotoInfo(file);
 
   photos.set([
     ...photos.get(),
@@ -24,7 +24,7 @@ export async function addPhoto(file: File) {
       file,
       angleOfView,
       bearing,
-      position,
+      gpsPosition,
     },
   ]);
 }

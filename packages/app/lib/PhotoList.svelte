@@ -29,14 +29,14 @@
     <ul>
       {#each $photos as photo}
         <li>
-          <button onclick={() => photo.position && flyTo(photo.position)}>
+          <button onclick={() => photo.gpsPosition && flyTo(photo.gpsPosition)}>
             <img
               src={URL.createObjectURL(photo.file)}
               alt=""
               class="image-preview"
             />
             <span class="location">
-              {#if photo.position}
+              {#if photo.gpsPosition}
                 📍
               {:else}
                 no location data

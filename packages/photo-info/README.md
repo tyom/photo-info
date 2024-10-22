@@ -20,13 +20,13 @@ npm install photo-info
 ## Usage
 
 ```ts
-import { getPhotoLocationData } from 'photo-info';
+import { getPhotoInfo } from 'photo-info';
 
 const { angleOfView, bearing, position, make, model } =
-  await getPhotoLocationData(file);
+  await getPhotoInfo(file);
 ```
 
-The `getPhotoLocationData` function returns an object with the following properties:
+The `getPhotoInfo` function returns an object with the following properties:
 
 - `angleOfView`: the angle of view of the photo in degrees
 - `bearing`: the bearing of the photo in degrees

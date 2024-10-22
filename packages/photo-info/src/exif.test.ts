@@ -6,7 +6,7 @@ import mockExif24mm from '@mocks/exif-iphone-14-pro-24mm.json';
 import mockExif78mm from '@mocks/exif-iphone-14-pro-78mm.json';
 import mockExifPortrait from '@mocks/exif-iphone-14-pro-portrait.json';
 import mockExifRightTop from '@mocks/exif-iphone-x-right-top-orientation.json';
-import { getPhotoLocationData } from './exif';
+import { getPhotoInfo } from './exif';
 
 const fileMock = new File([''], 'photo.jpg');
 
@@ -33,13 +33,20 @@ test('returns location data for 14mm lens', async () => {
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExif14mm);
 
-  await expect(getPhotoLocationData(fileMock)).resolves.toEqual({
+  await expect(getPhotoInfo(fileMock)).resolves.toEqual({
     make: 'Apple',
     model: 'iPhone 14 Pro',
+    lens: 'iPhone 14 Pro back triple camera 2.22mm f/2.2',
+    dateTime: '2024-10-19T01:01:14',
+    exposureProgram: 'Normal program',
+    exposureTime: '1/30',
     angleOfView: 102.0721,
+    fNumber: 'f/2.2',
     focalLength: 2.22,
     focalLengthIn35mm: 14,
-    position: [51.5042361, 0.0465306],
+    gpsAltitude: 6.4919,
+    gpsPosition: [51.5042361, 0.0465306],
+    gpsSpeed: 0,
     bearing: 299.93,
     height: 3024,
     width: 4032,
@@ -52,16 +59,23 @@ test('returns location data for 24mm lens', async () => {
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExif24mm);
 
-  await expect(getPhotoLocationData(fileMock)).resolves.toEqual({
+  await expect(getPhotoInfo(fileMock)).resolves.toEqual({
     make: 'Apple',
     model: 'iPhone 14 Pro',
+    lens: 'iPhone 14 Pro back triple camera 6.86mm f/1.78',
     angleOfView: 71.5716,
     focalLength: 6.86,
     focalLengthIn35mm: 24,
-    position: [51.5042361, 0.0465306],
+    gpsAltitude: 6.4919,
+    gpsPosition: [51.5042361, 0.0465306],
+    gpsSpeed: 0,
     bearing: 299.93,
     height: 6048,
     width: 8064,
+    dateTime: '2024-10-19T01:01:24',
+    exposureProgram: 'Normal program',
+    exposureTime: '1/20',
+    fNumber: 'f/1.7799999713880652',
     orientation: 'landscape',
     frontCamera: false,
   });
@@ -71,16 +85,23 @@ test('returns location data for 77mm lens', async () => {
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExif78mm);
 
-  await expect(getPhotoLocationData(fileMock)).resolves.toEqual({
+  await expect(getPhotoInfo(fileMock)).resolves.toEqual({
     make: 'Apple',
     model: 'iPhone 14 Pro',
+    lens: 'iPhone 14 Pro back triple camera 9mm f/2.8',
     angleOfView: 24.9969,
     focalLength: 9,
     focalLengthIn35mm: 78,
-    position: [51.5042361, 0.0465306],
+    gpsAltitude: 6.4919,
+    gpsPosition: [51.5042361, 0.0465306],
+    gpsSpeed: 0,
     bearing: 299.93,
     height: 3024,
     width: 4032,
+    dateTime: '2024-10-19T01:01:18',
+    exposureProgram: 'Normal program',
+    exposureTime: '1/17',
+    fNumber: 'f/2.8',
     orientation: 'landscape',
     frontCamera: false,
   });
@@ -90,16 +111,23 @@ test('returns correct orientation for portrait photo based on width and height',
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifPortrait);
 
-  await expect(getPhotoLocationData(fileMock)).resolves.toEqual({
+  await expect(getPhotoInfo(fileMock)).resolves.toEqual({
     make: 'Apple',
     model: 'iPhone 14 Pro',
+    lens: 'iPhone 14 Pro back triple camera 9mm f/2.8',
     angleOfView: 25.3608,
     focalLength: 9,
     focalLengthIn35mm: 77,
-    position: [52.3586194, 4.9417333],
+    gpsAltitude: 0.3705,
+    gpsPosition: [52.3586194, 4.9417333],
+    gpsSpeed: 0.7296,
     bearing: 306.03,
     height: 4032,
     width: 3024,
+    dateTime: '2024-10-13T10:48:38',
+    exposureProgram: 'Normal program',
+    exposureTime: '1/416',
+    fNumber: 'f/2.8',
     orientation: 'portrait',
     frontCamera: false,
   });
@@ -109,16 +137,23 @@ test('returns correct orientation for portrait photo based on orientation tag', 
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifRightTop);
 
-  await expect(getPhotoLocationData(fileMock)).resolves.toEqual({
+  await expect(getPhotoInfo(fileMock)).resolves.toEqual({
     make: 'Apple',
     model: 'iPhone X',
+    lens: 'iPhone X back dual camera 4mm f/1.8',
     angleOfView: 63.3907,
     focalLength: 4,
     focalLengthIn35mm: 28,
-    position: null,
+    gpsAltitude: null,
+    gpsPosition: null,
+    gpsSpeed: null,
     bearing: null,
     height: 3024,
     width: 4032,
+    dateTime: '2019-08-06T16:56:17',
+    exposureProgram: 'Normal program',
+    exposureTime: '1/20',
+    fNumber: 'f/1.8',
     orientation: 'portrait',
     frontCamera: false,
   });
@@ -128,16 +163,23 @@ test('returns `frontCamera: true` for selfie', async () => {
   // @ts-expect-error partial mock with JSON
   vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifSelfie);
 
-  await expect(getPhotoLocationData(fileMock)).resolves.toEqual({
+  await expect(getPhotoInfo(fileMock)).resolves.toEqual({
     make: 'Apple',
     model: 'iPhone 14 Pro',
+    lens: 'iPhone 14 Pro front camera 2.69mm f/1.9',
     angleOfView: 73.944,
     focalLength: 2.69,
     focalLengthIn35mm: 23,
-    position: [52.3712056, 4.8948222],
+    gpsAltitude: 1.4725,
+    gpsPosition: [52.3712056, 4.8948222],
+    gpsSpeed: 0.2204,
     bearing: 340.77,
     height: 3024,
     width: 4032,
+    dateTime: '2024-10-13T17:14:58',
+    exposureProgram: 'Normal program',
+    exposureTime: '1/75',
+    fNumber: 'f/1.9',
     orientation: 'landscape',
     frontCamera: true,
   });

@@ -1,2 +1,2 @@
-export { getPhotoLocationData } from './exif.ts';
+export { getPhotoInfo } from './exif.ts';
 export * from './svg.ts';
