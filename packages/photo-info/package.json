@@ -47,6 +47,7 @@
     "exifreader": "^4.23.7"
   },
   "devDependencies": {
+    "eslint-plugin-vitest": "^0.5.4",
     "tsup": "^8.3.0",
     "vitest": "^2.1.3"
   }
