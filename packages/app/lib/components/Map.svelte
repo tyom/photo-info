@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createMap } from '../stores/map';
+  import { createMap } from '$stores/map';
 
   function mapAction(container: HTMLDivElement) {
     const map = createMap(container);

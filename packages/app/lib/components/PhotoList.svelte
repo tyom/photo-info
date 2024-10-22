@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { addPhoto, photos } from '../stores/photos';
   import Dropzone from 'svelte-file-dropzone';
-  import { flyTo } from '../stores/map';
+  import { addPhoto, photos } from '$stores/photos';
+  import { flyTo } from '$stores/map';
+  import { Button } from '$lib/components/ui/button';
 
   let isSidebarOpen = $state(false);
 
@@ -16,7 +17,7 @@
 
 {#if !isSidebarOpen}
   <div class="add-photos">
-    <button onclick={() => (isSidebarOpen = true)}>Add Photos</button>
+    <Button onclick={() => (isSidebarOpen = true)}>Add Photos</Button>
   </div>
 {/if}
 

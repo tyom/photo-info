@@ -1,10 +1,11 @@
 <script lang="ts">
-  import Map from './lib/Map.svelte';
-  import PhotoList from './lib/PhotoList.svelte';
-  import './style.css';
+  import { ModeWatcher } from 'mode-watcher';
+  import { Map, PhotoList } from '$lib/components';
+  import './app.css';
 </script>
 
 <main>
   <Map />
   <PhotoList />
+  <ModeWatcher />
 </main>
