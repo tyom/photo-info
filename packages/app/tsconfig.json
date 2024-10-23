@@ -8,5 +8,5 @@
       "$stores/*": ["./src/stores/*"]
     }
   },
-  "include": ["src/vite-end.d.ts"]
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }
