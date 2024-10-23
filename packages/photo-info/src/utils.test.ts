@@ -1,4 +1,4 @@
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 import {
   calculate35mmEquivalentFocalLength,
   calculateAngleOfView,
@@ -30,19 +30,6 @@ test('calculates sensor size for different focal lengths', () => {
   expect(calculateSensorSize(14, 2.22)).toEqual({ width: 5.49, height: 4.12 });
   expect(calculateSensorSize(24, 6.86)).toEqual({ width: 9.89, height: 7.42 });
   expect(calculateSensorSize(78, 9)).toEqual({ width: 3.99, height: 3 });
-});
-
-test('isDebugging', async () => {
-  const { isDebugging: libDebuggingDefault } = await import('./utils');
-
-  expect(libDebuggingDefault).toEqual(false);
-
-  vi.stubEnv('DEBUG_LIB', 'true');
-  vi.resetModules();
-
-  const { isDebugging: libDebuggingOn } = await import('./utils');
-
-  expect(libDebuggingOn).toEqual(true);
 });
 
 test('divide array items', async () => {

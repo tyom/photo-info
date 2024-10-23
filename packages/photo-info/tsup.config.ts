@@ -10,7 +10,4 @@ export default defineConfig({
   bundle: true,
   noExternal: ['exifreader'], // include exifreader in the bundle
   splitting: false,
-  env: {
-    DEBUG_LIB: process.env.DEBUG_LIB ?? '0',
-  },
 });

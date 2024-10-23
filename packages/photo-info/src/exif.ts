@@ -2,7 +2,6 @@ import * as ExifReader from 'exifreader';
 import {
   calculateAngleOfView,
   divideArrayItems,
-  isDebugging,
   reformatDate,
 } from './utils.ts';
 
@@ -13,6 +12,30 @@ export type Position = [Latitude, Longitude, Altitude?];
 
 type ExifTagName = keyof ExifReader.Tags;
 type ExifTag = ExifReader.Tags[ExifTagName];
+
+type PhotoInfo = {
+  make: string | null;
+  model: string | null;
+  angleOfView: number;
+  focalLength: number | null;
+  focalLengthIn35mm: number;
+  gpsPosition: Position | null;
+  gpsSpeed: {
+    value: number;
+    unit: string;
+  } | null;
+  bearing: number | null;
+  width: number;
+  height: number;
+  orientation: 'landscape' | 'portrait' | 'square';
+  frontCamera: boolean;
+  dateTime: string | null;
+  exposureTime: string | null;
+  exposureProgram: string | null;
+  fNumber: string | null;
+  lens: string | null;
+  originalTags?: ExifReader.Tags;
+};
 
 const truncateSpeedUnit = (unit: string) => {
   const units: Record<string, string> = {
@@ -104,8 +127,13 @@ async function parseExifData(file: File) {
 /**
  * Get the location information from the EXIF data of a photo.
  * @param file - image file with EXIF data
+ * @param includeOriginalTags - whether to include the original EXIF data
+ * @returns the formatted metadata of the photo
  */
-export async function getPhotoInfo(file: File) {
+export async function getPhotoInfo(
+  file: File,
+  includeOriginalTags = false,
+): Promise<PhotoInfo> {
   const { tags, gpsPosition, getExifValue } = await parseExifData(file);
 
   const bearing = getExifValue('GPSImgDirection', 'description', (degrees) =>
@@ -118,8 +146,8 @@ export async function getPhotoInfo(file: File) {
     'FocalLengthIn35mmFilm',
     'value',
   ) as number;
-  const width = getExifValue('Image Width', 'value')!;
-  const height = getExifValue('Image Height', 'value')!;
+  const width = getExifValue('Image Width', 'value') as number;
+  const height = getExifValue('Image Height', 'value') as number;
   const frontCamera = !!getExifValue('Lens', 'value')?.includes(' front ');
   const imageOrientation = ['right-top', 'left-top'].includes(
     getExifValue('Orientation', 'description') ?? '',
@@ -148,7 +176,7 @@ export async function getPhotoInfo(file: File) {
     orientation = 'portrait';
   }
 
-  const result = {
+  const result: PhotoInfo = {
     make: getExifValue('Make', 'description'),
     model: getExifValue('Model', 'description'),
     angleOfView: calculateAngleOfView(focalLength, focalLengthIn35mm),
@@ -169,9 +197,8 @@ export async function getPhotoInfo(file: File) {
       getExifValue('Lens', 'value') ?? getExifValue('LensModel', 'description'),
   };
 
-  if (isDebugging) {
-    console.log('EXIF data', tags);
-    console.log('Extracted data', result);
+  if (includeOriginalTags) {
+    result.originalTags = tags;
   }
 
   return result;

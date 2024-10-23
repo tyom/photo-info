@@ -1,5 +1,3 @@
-export const isDebugging = ['1', 'true'].includes(process.env.DEBUG_LIB ?? '');
-
 /**
  * Calculate sensor diagonal from width and height. Defaults to 36mm x 24mm (full frame).
  * @param [width = 36]

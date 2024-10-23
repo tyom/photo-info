@@ -12,8 +12,22 @@ export type Photo = {
 export const photos = atom<Photo[]>([]);
 export const selectedPhoto = atom<Photo | null>(null);
 
+const isDebugging = import.meta.env.MODE === 'development';
+
 export async function addPhoto(file: File) {
-  const photoInfo = await getPhotoInfo(file);
+  const { originalTags, ...photoInfo } = await getPhotoInfo(file, isDebugging);
+
+  if (photos.get().find((p) => p.id === file.name)) {
+    console.warn('photo with the same name already exists');
+    return;
+  }
+
+  if (originalTags) {
+    console.log(file.name, {
+      'EXIF data': originalTags,
+      'Extracted data': photoInfo,
+    });
+  }
 
   photos.set([
     ...photos.get(),
