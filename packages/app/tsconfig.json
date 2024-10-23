@@ -3,9 +3,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "$lib": ["./lib"],
-      "$lib/*": ["./lib/*"],
-      "$stores/*": ["./stores/*"]
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"],
+      "$stores/*": ["./src/stores/*"]
     }
-  }
+  },
+  "include": ["src/vite-end.d.ts"]
 }

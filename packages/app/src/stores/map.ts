@@ -1,16 +1,24 @@
 import { atom, computed } from 'nanostores';
 import * as L from 'leaflet';
 import debounce from 'debounce';
-import { createFovMarkerSvg, createSimpleMarkerSvg } from 'photo-info';
-import { tileLayers } from '../layers';
-import { photos } from './photos';
+import {
+  createFovMarkerSvg,
+  createSimpleMarkerSvg,
+  type Position,
+} from 'photo-info';
+import { tileLayers } from '../../layers';
+import { Photo, photos } from './photos';
 
 const initialView = [51.505, -0.09] as L.LatLngTuple;
 const initialZoom = 14;
 
 export const map = atom<L.Map | null>(null);
 export const markers = computed(photos, (photos) =>
-  photos.filter((p) => !!p.gpsPosition).map(createMarker),
+  photos
+    .filter((p): p is Photo & { gpsPosition: Position } =>
+      Boolean(p.gpsPosition),
+    )
+    .map(createMarker),
 );
 
 export function createMap(container: HTMLDivElement) {
@@ -29,7 +37,7 @@ export function createMap(container: HTMLDivElement) {
 }
 
 type MakerOptions = {
-  gpsPosition: L.LatLngTuple;
+  gpsPosition: Position;
   angleOfView?: number | null;
   bearing?: number | null;
   size?: number;
