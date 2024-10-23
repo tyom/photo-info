@@ -5,7 +5,8 @@
     "paths": {
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"],
-      "$stores/*": ["./src/stores/*"]
+      "$runes": ["./src/runes"],
+      "$runes/*": ["./src/runes/*"]
     }
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

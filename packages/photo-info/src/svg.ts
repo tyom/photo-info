@@ -1,45 +1,67 @@
-export function createFovMarkerSvg(
-  fovDegrees: number,
-  bearingAngle: number,
-  size = 200,
-) {
-  // Calculate the base of the triangle using the FOV and distance
-  const halfFovRadians = (fovDegrees / 2) * (Math.PI / 180); // Convert half of the FOV to radians
-  const baseHalfLength = Math.tan(halfFovRadians) * size; // Half of the base of the triangle
+type MarkerOptions = {
+  angleOfView?: number | null;
+  bearing?: number | null;
+  viewBoxSize?: number;
+  circleSize?: number;
+  circleColor?: string;
+  circleStroke?: string;
+  circleStrokeWidth?: number;
+  fovColor?: string;
+  fovStroke?: string;
+};
 
-  return `
-    <svg width="${size}" height="${size}"
-         viewBox="-${size / 2} -${size / 2} ${size} ${size}">
+export function createFovMarkerSvg({
+  angleOfView,
+  bearing,
+  viewBoxSize = 200,
+  circleSize = 5,
+  circleColor = 'orange',
+  circleStroke = 'white',
+  circleStrokeWidth = 1,
+  fovColor = 'lightblue',
+  fovStroke = 'white',
+}: MarkerOptions) {
+  const circle = `<circle cx="0" cy="0" r="${circleSize}" fill="${circleColor}"
+    stroke="${circleStroke}" stroke-width="${circleStrokeWidth}"/>`;
+
+  function buildAngledPolygon() {
+    if (!angleOfView || !bearing) {
+      return '';
+    }
+    // Calculate the base of the triangle using the FOV and distance
+    const halfFovRadians = (angleOfView / 2) * (Math.PI / 180); // Convert half of the FOV to radians
+    const baseHalfLength = Math.tan(halfFovRadians) * viewBoxSize;
+    return `
       <defs>
-        <radialGradient id="fade-gradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="white" stop-opacity="1"/>
-          <stop offset="80%" stop-color="white" stop-opacity="0"/>
+        <radialGradient id="fade-gradient" cx="50%" cy="50%" r="90%">
+          <stop offset="0%" stop-color="white" stop-opacity="0.5"/>
+          <stop offset="50%" stop-color="white" stop-opacity="0"/>
         </radialGradient>
 
         <mask id="circle-mask">
-          <rect x="-${size / 2}" y="-${size / 2}" width="${size}"
-                height="${size}" fill="url(#fade-gradient)"/>
+          <rect x="-${viewBoxSize / 2}" y="-${viewBoxSize / 2}" width="${viewBoxSize}"
+                height="${viewBoxSize}" fill="url(#fade-gradient)"/>
         </mask>
       </defs>
-
-      <g transform="rotate(${bearingAngle} 0 0)">
+      <g transform="rotate(${bearing} 0 0)">
         <polygon
-            points="0,0 ${-baseHalfLength / 2},${-size / 2} ${baseHalfLength / 2},${-size / 2}"
-            fill="lightblue"
-            stroke="white"
-            stroke-width="1"
-            mask="url(#circle-mask)"/>
+          points="0,0 ${-baseHalfLength / 2},${-viewBoxSize / 2} ${baseHalfLength / 2},${-viewBoxSize / 2}"
+          fill="${fovColor}"
+          stroke="${fovStroke}"
+          stroke-width="1"
+          mask="url(#circle-mask)"
+        />
       </g>
+    `.trim();
+  }
 
-      <circle cx="0" cy="0" r="5" fill="blue" stroke="white" stroke-width="2"/>
-    </svg>
-    `;
-}
+  console.log('!!', buildAngledPolygon());
 
-export function createSimpleMarkerSvg(size = 10) {
   return `
-    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <circle cx="0" cy="0" r="${size / 2}" fill="blue" stroke="white" stroke-width="2"/>
+    <svg width="${viewBoxSize}" height="${viewBoxSize}"
+      viewBox="-${viewBoxSize / 2} -${viewBoxSize / 2} ${viewBoxSize} ${viewBoxSize}">
+      ${buildAngledPolygon()}
+      ${circle}
     </svg>
   `;
 }

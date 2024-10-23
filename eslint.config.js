@@ -25,12 +25,12 @@ export default tseslint.config(
         {
           pathGroups: [
             {
-              pattern: '~/**',
+              pattern: '$**',
               group: 'internal',
               position: 'before',
             },
             {
-              pattern: '@/**',
+              pattern: '$**/*',
               group: 'internal',
               position: 'before',
             },

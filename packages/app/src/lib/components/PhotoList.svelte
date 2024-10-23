@@ -1,6 +1,6 @@
 <script lang="ts">
   import Dropzone from 'svelte-file-dropzone';
-  import { addPhoto, photos, selectPhoto } from '$stores/photos';
+  import { gallery } from '$runes';
   import { Button } from './ui/button';
   import { Label } from './ui/label';
   import * as RadioGroup from './ui/radio-group';
@@ -11,12 +11,9 @@
 
   let isSidebarOpen = $state(false);
 
-  async function handleFilesSelect(e: CustomEvent<FileList>) {
+  async function handleFileDrop(e: CustomEvent<{ acceptedFiles: File[] }>) {
     const { acceptedFiles } = e.detail;
-
-    for (const file of acceptedFiles) {
-      await addPhoto(file);
-    }
+    await gallery.addPhotos(acceptedFiles);
   }
 </script>
 
@@ -34,15 +31,21 @@
   >
     <header class="flex justify-between items-center p-4">
       <h2 class="text-xl font-bold">Photos</h2>
-      <button onclick={() => (isSidebarOpen = false)}><IconClose /></button>
-    </header>
-    {#if $photos.length > 0}
-      <RadioGroup.Root
-        value="card"
-        class="flex flex-col flex-2 p-4 pt-0 border-red-400 overflow-auto mb-30"
-        onValueChange={selectPhoto}
+      <Button
+        variant="ghost"
+        size="icon"
+        onclick={() => (isSidebarOpen = false)}
       >
-        {#each $photos as photo}
+        <IconClose />
+      </Button>
+    </header>
+    {#if gallery.photos.length > 0}
+      <RadioGroup.Root
+        value={gallery.selectedPhoto?.id ?? ''}
+        class="flex flex-col flex-2 p-4 pt-0 border-red-400 overflow-auto mb-30"
+        onValueChange={gallery.selectPhoto}
+      >
+        {#each gallery.photos as photo}
           <Label
             for={photo.file.name}
             class="border-muted hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary flex flex-col items-center justify-between rounded-md border-2 bg-transparent"
@@ -81,7 +84,7 @@
       </RadioGroup.Root>
     {/if}
     <Dropzone
-      on:drop={handleFilesSelect}
+      on:drop={handleFileDrop}
       containerClasses="flex-1 !bg-transparent flex text-center justify-center"
     />
   </form>
