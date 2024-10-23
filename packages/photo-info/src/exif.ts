@@ -3,15 +3,23 @@ import {
   calculateAngleOfView,
   divideArrayItems,
   isDebugging,
+  reformatDate,
 } from './utils.ts';
 
 type Latitude = number;
 type Longitude = number;
 type Altitude = number;
-type Position = [Latitude, Longitude, Altitude?];
+export type Position = [Latitude, Longitude, Altitude?];
 
 type ExifTagName = keyof ExifReader.Tags;
 type ExifTag = ExifReader.Tags[ExifTagName];
+
+const truncateSpeedUnit = (unit: string) => {
+  const units: Record<string, string> = {
+    'Kilometers per hour': 'km/h',
+  };
+  return units[unit] ?? unit;
+};
 
 async function parseExifData(file: File) {
   const tags = await ExifReader.load(file);
@@ -63,15 +71,24 @@ async function parseExifData(file: File) {
         'description',
         (lat) => +lat * latRef!,
       );
+      const altitude = getExifValue('GPSAltitude', 'value', (value) =>
+        divideArrayItems(value as number[]),
+      );
 
       if (typeof longitude !== 'number' || typeof latitude !== 'number') {
         return null;
       }
 
-      return [
+      const result = [
         parseFloat(latitude.toFixed(7)),
         parseFloat(longitude.toFixed(7)),
-      ] as Position;
+      ];
+
+      if (altitude) {
+        result.push(parseFloat(altitude.toFixed(2)));
+      }
+
+      return result as Position;
     }
 
     return null;
@@ -107,6 +124,22 @@ export async function getPhotoInfo(file: File) {
   const imageOrientation = ['right-top', 'left-top'].includes(
     getExifValue('Orientation', 'description') ?? '',
   );
+  const dateTime = getExifValue('DateTime', 'description');
+
+  let fNumber = getExifValue('FNumber', 'description');
+  if (fNumber) {
+    fNumber = fNumber.substring(0, 8);
+  }
+
+  let gpsSpeed: { value: number; unit: string } | null = null;
+  if (getExifValue('GPSSpeed', 'value')) {
+    gpsSpeed = {
+      value: getExifValue('GPSSpeed', 'value', (value) =>
+        divideArrayItems(value as number[]),
+      )!,
+      unit: truncateSpeedUnit(getExifValue('GPSSpeedRef', 'description')!),
+    };
+  }
 
   let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
   if (width === height) {
@@ -122,23 +155,18 @@ export async function getPhotoInfo(file: File) {
     focalLength: parseFloat(focalLength.toFixed(2)),
     focalLengthIn35mm,
     gpsPosition,
-    gpsSpeed: getExifValue('GPSSpeed', 'value', (value) =>
-      divideArrayItems(value as number[]),
-    ),
-    gpsAltitude: getExifValue('GPSAltitude', 'value', (value) =>
-      divideArrayItems(value as number[]),
-    ),
+    gpsSpeed,
     bearing,
     width,
     height,
     orientation,
     frontCamera,
+    dateTime: reformatDate(dateTime),
     exposureTime: getExifValue('ExposureTime', 'description'),
     exposureProgram: getExifValue('ExposureProgram', 'description'),
-    fNumber: getExifValue('FNumber', 'description'),
+    fNumber,
     lens:
       getExifValue('Lens', 'value') ?? getExifValue('LensModel', 'description'),
-    dateTime: getExifValue('CreateDate', 'value'),
   };
 
   if (isDebugging) {
