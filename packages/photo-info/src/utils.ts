@@ -86,7 +86,7 @@ export function calculateAngleOfView(
   const fov = 2 * Math.atan(width / (2 * focalLength));
   const fovDegrees = fov * (180 / Math.PI);
 
-  return parseFloat(fovDegrees.toFixed(4));
+  return fovDegrees ? parseFloat(fovDegrees.toFixed(4)) : null;
 }
 
 /**

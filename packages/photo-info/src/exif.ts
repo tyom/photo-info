@@ -16,7 +16,7 @@ type ExifTag = ExifReader.Tags[ExifTagName];
 type PhotoInfo = {
   make: string | null;
   model: string | null;
-  angleOfView: number;
+  angleOfView: number | null;
   focalLength: number | null;
   focalLengthIn35mm: number;
   gpsPosition: Position | null;
@@ -180,7 +180,7 @@ export async function getPhotoInfo(
     make: getExifValue('Make', 'description'),
     model: getExifValue('Model', 'description'),
     angleOfView: calculateAngleOfView(focalLength, focalLengthIn35mm),
-    focalLength: parseFloat(focalLength.toFixed(2)),
+    focalLength: focalLength ? parseFloat(focalLength.toFixed(2)) : null,
     focalLengthIn35mm,
     gpsPosition,
     gpsSpeed,
