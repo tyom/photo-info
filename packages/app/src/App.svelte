@@ -29,7 +29,6 @@
 
 <style>
   main {
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
   }
 </style>

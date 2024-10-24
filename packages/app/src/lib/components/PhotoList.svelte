@@ -1,6 +1,11 @@
 <script lang="ts">
   import Dropzone from 'svelte-file-dropzone';
-  import { gallery, fitToAllMarkers, fitToMarkerByPosition } from '$runes';
+  import {
+    gallery,
+    fitToAllMarkers,
+    fitToMarkerByPosition,
+    type Photo,
+  } from '$runes';
   import { Button } from './ui/button';
   import { Label } from './ui/label';
   import * as RadioGroup from './ui/radio-group';
@@ -44,6 +49,8 @@
       fitMarkers();
     }
   });
+
+  const getAspectRatio = (photo: Photo) => `${photo.width / photo.height}/1`;
 </script>
 
 {#if !isSidebarOpen}
@@ -59,26 +66,31 @@
     bind:clientWidth={formWidth}
     class="absolute z-10 inset-0 left-auto w-1/5 min-w-20 max-w-72 bg-gray-800/80 backdrop-blur flex flex-col"
   >
-    <header class="flex justify-between items-center p-4">
-      <h2 class="text-xl font-bold">Photos</h2>
-      <Button
-        variant="ghost"
-        size="icon"
-        onclick={() => (isSidebarOpen = false)}
-      >
-        <IconClose />
-      </Button>
+    <header class="p-4 pb-2">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-bold">Photos</h2>
+        <Button
+          variant="ghost"
+          size="icon"
+          onclick={() => (isSidebarOpen = false)}
+        >
+          <IconClose />
+        </Button>
+      </div>
+      <p class="text-xs">
+        The photos stay in your browser.<br />They are not uploaded anywhere.
+      </p>
     </header>
     {#if gallery.photos.length > 0}
       <RadioGroup.Root
         value={gallery.selectedPhoto?.id ?? ''}
-        class="flex flex-col flex-2 px-4 border-red-400 overflow-auto mb-30"
+        class="flex flex-col flex-2 px-4 py-2 overflow-auto mb-30 border-white/50 border-t border-b"
         onValueChange={gallery.selectPhoto}
       >
         {#each gallery.photos as photo}
           <Label
             for={photo.file.name}
-            class="border-muted hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary flex flex-col items-center justify-between rounded-md border-2 bg-transparent"
+            class="border-muted hover:border-white/30 [&:has([data-state=checked])]:border-primary flex flex-col items-center justify-between border-2 bg-transparent shadow cursor-pointer"
           >
             <RadioGroup.Item
               value={photo.file.name}
@@ -86,11 +98,19 @@
               class="sr-only"
               aria-label="Card"
             />
-            <figure class="relative min-h-10 w-full">
+            <figure
+              class="relative w-full"
+              style="aspect-ratio: {getAspectRatio(photo)}"
+            >
               <img
                 src={URL.createObjectURL(photo.file)}
                 alt=""
+                width="auto"
+                height="auto"
                 class="image-preview"
+                onload={(evt) => {
+                  evt.target.classList.add('loaded');
+                }}
               />
               <figcaption
                 class="flex gap-2 items-center absolute inset-0 top-auto z-2 bg-black/50 p-2 text-xs"
@@ -124,3 +144,13 @@
     />
   </form>
 {/if}
+
+<style>
+  .image-preview {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+  :global(.image-preview.loaded) {
+    opacity: 1;
+  }
+</style>
