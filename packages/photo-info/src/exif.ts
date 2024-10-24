@@ -149,9 +149,8 @@ export async function getPhotoInfo(
   const width = getExifValue('Image Width', 'value') as number;
   const height = getExifValue('Image Height', 'value') as number;
   const frontCamera = !!getExifValue('Lens', 'value')?.includes(' front ');
-  const imageOrientation = ['right-top', 'left-top'].includes(
-    getExifValue('Orientation', 'description') ?? '',
-  );
+  const imageOrientation = getExifValue('Orientation', 'description') ?? '';
+  const isPortrait = ['right-top', 'left-top'].includes(imageOrientation);
   const dateTime = getExifValue('DateTime', 'description');
 
   let fNumber = getExifValue('FNumber', 'description');
@@ -172,8 +171,17 @@ export async function getPhotoInfo(
   let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
   if (width === height) {
     orientation = 'square';
-  } else if (height > width || imageOrientation) {
+  } else if (height > width || isPortrait) {
     orientation = 'portrait';
+  }
+
+  let adjustedWidth = width;
+  let adjustedHeight = height;
+  // Sometimes the width and the height are not aligned with the orientation
+  // Assume that all photos with width > height are portrait
+  if (width > height && isPortrait) {
+    adjustedWidth = height;
+    adjustedHeight = width;
   }
 
   const result: PhotoInfo = {
@@ -185,8 +193,8 @@ export async function getPhotoInfo(
     gpsPosition,
     gpsSpeed,
     bearing,
-    width,
-    height,
+    width: adjustedWidth,
+    height: adjustedHeight,
     orientation,
     frontCamera,
     dateTime: reformatDate(dateTime),
