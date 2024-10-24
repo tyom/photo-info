@@ -8,10 +8,12 @@
   import IconGpsOff from 'virtual:icons/ic/baseline-gps-off';
   import IconClose from 'virtual:icons/ic/baseline-close';
   import IconPhotoGallery from 'virtual:icons/ic/baseline-photo-library';
+  import { cn } from '$lib/utils';
 
-  let isSidebarOpen = $state(false);
+  let isSidebarOpen = $state(true);
   let formWidth = $state(0);
   let hasAddedFiles = $state(false);
+  let isDraggingOver = $state(false);
 
   const fitMarkers = () =>
     fitToAllMarkers({
@@ -22,6 +24,8 @@
   async function handleFileDrop(e: CustomEvent<{ acceptedFiles: File[] }>) {
     const { acceptedFiles } = e.detail;
     await gallery.addPhotos(acceptedFiles);
+
+    isDraggingOver = false;
 
     // TODO: find a better way to ensure all markers are added
     setTimeout(() => {
@@ -68,7 +72,7 @@
     {#if gallery.photos.length > 0}
       <RadioGroup.Root
         value={gallery.selectedPhoto?.id ?? ''}
-        class="flex flex-col flex-2 p-4 pt-0 border-red-400 overflow-auto mb-30"
+        class="flex flex-col flex-2 px-4 border-red-400 overflow-auto mb-30"
         onValueChange={gallery.selectPhoto}
       >
         {#each gallery.photos as photo}
@@ -111,7 +115,12 @@
     {/if}
     <Dropzone
       on:drop={handleFileDrop}
-      containerClasses="flex-1 !bg-transparent flex text-center justify-center"
+      on:dragover={() => (isDraggingOver = true)}
+      on:dragleave={(isDraggingOver = false)}
+      containerClasses={cn(
+        'flex-1 m-2 !bg-transparent flex text-center justify-center !border-white/50 !rounded-lg hover:!border-white/75',
+        isDraggingOver && '!bg-white/10 !border-white',
+      )}
     />
   </form>
 {/if}
