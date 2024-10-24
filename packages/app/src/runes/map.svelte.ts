@@ -1,63 +1,66 @@
 import * as L from 'leaflet';
-import { type Position } from 'photo-info';
-import { gallery, type Photo } from '$runes';
-import { createMarker } from '$lib/map';
-import { tileLayers } from '../../layers';
-import { initialView, initialZoom } from '../constants';
 
 let map = $state<L.Map | null>(null);
+const markers = $state<Map<string, L.Marker>>(new Map());
 
-const photoMarkers = $derived(
-  gallery.photos
-    .filter((p): p is Photo & { gpsPosition: Position } =>
-      Boolean(p.gpsPosition),
-    )
-    .map(createMarker),
-);
+type FlyToOptions = {
+  duration?: number;
+  easeLinearity?: number;
+  noMoveStart?: boolean;
+  paddingTopLeft?: [number, number];
+  paddingBottomRight?: [number, number];
+  padding?: [number, number];
+};
 
-const photoMarkerGroup = $derived(L.featureGroup(photoMarkers));
-
-/**
- *
- * @param location
- * @param [zoom = 18]
- * @param [options]
- * @param [options.duration = 2.4] - Animation duration in seconds
- * @param [options.easeLinearity=0.3] - Event trigger for movestart event; default is false
- * @param [options.noMoveStart = false] - Control the rate of animation; lower means slower acceleration
- */
-export function flyTo(
-  location: L.LatLngTuple | L.LatLngBounds,
-  zoom = 18,
-  options = { duration: 2.5, easeLinearity: 0.3, noMoveStart: false },
-) {
-  if (!location) {
-    throw new Error('Location not provided');
+export function createMap(container: HTMLDivElement, options?: L.MapOptions) {
+  if (!options?.center) {
+    throw new Error('Map center not provided');
   }
-  // Tuple, assuming it's a single location
-  if (Array.isArray(location)) {
-    map?.flyTo(location, zoom, options);
-    // Assuming bounds
-  } else {
-    map?.flyToBounds(location, options);
-  }
-}
-
-export function createMap(container: HTMLDivElement) {
   const m = L.map(container, { preferCanvas: true }).setView(
-    initialView,
-    initialZoom,
+    options.center,
+    options.zoom,
   );
 
   map = m;
-
-  tileLayers.forEach(({ urlTemplate, layerOptions }) =>
-    L.tileLayer(urlTemplate, layerOptions).addTo(m),
-  );
-
   return m;
 }
 
+export function addMarker(marker: L.Marker) {
+  if (!map) {
+    throw new Error('Map not initialized');
+  }
+
+  const latLngKey = marker.getLatLng().toString();
+  const isExistingMarker = markers.has(latLngKey);
+
+  if (!isExistingMarker) {
+    markers.set(latLngKey, marker);
+    marker.addTo(map);
+  }
+}
+
+export function fitToAllMarkers(options: FlyToOptions) {
+  if (markers.size === 0) {
+    return;
+  }
+  const markerGroup = L.featureGroup(Array.from(markers.values()));
+  map?.flyToBounds(markerGroup.getBounds(), options);
+}
+
+export function fitToMarkerByPosition(
+  position: L.LatLngTuple,
+  options: FlyToOptions,
+) {
+  const markerKey = L.latLng(position).toString();
+  const marker = markers.get(markerKey);
+  if (!marker) {
+    console.warn(`No active markers found for ${markerKey}`);
+    console.log(markers.keys());
+    return;
+  }
+  const markerGroup = L.featureGroup([marker]);
+  map?.flyToBounds(markerGroup.getBounds(), options);
+}
+
 export const getMap = () => map;
-export const getMarkers = () => photoMarkers;
-export const getMarkerGroup = () => photoMarkerGroup;
+export const getMarkers = () => markers;

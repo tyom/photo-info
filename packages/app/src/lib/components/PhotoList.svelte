@@ -1,6 +1,6 @@
 <script lang="ts">
   import Dropzone from 'svelte-file-dropzone';
-  import { gallery } from '$runes';
+  import { gallery, fitToAllMarkers, fitToMarkerByPosition } from '$runes';
   import { Button } from './ui/button';
   import { Label } from './ui/label';
   import * as RadioGroup from './ui/radio-group';
@@ -10,11 +10,36 @@
   import IconPhotoGallery from 'virtual:icons/ic/baseline-photo-library';
 
   let isSidebarOpen = $state(false);
+  let formWidth = $state(0);
+  let hasAddedFiles = $state(false);
+
+  const fitMarkers = () =>
+    fitToAllMarkers({
+      paddingTopLeft: [50, 50],
+      paddingBottomRight: [formWidth, 50],
+    });
 
   async function handleFileDrop(e: CustomEvent<{ acceptedFiles: File[] }>) {
     const { acceptedFiles } = e.detail;
     await gallery.addPhotos(acceptedFiles);
+
+    // TODO: find a better way to ensure all markers are added
+    setTimeout(() => {
+      hasAddedFiles = true;
+      fitMarkers();
+    }, 800);
   }
+
+  $effect(() => {
+    if (gallery.selectedPhoto?.gpsPosition) {
+      fitToMarkerByPosition(gallery.selectedPhoto.gpsPosition, {
+        paddingTopLeft: [50, 50],
+        paddingBottomRight: [formWidth, 50],
+      });
+    } else if (hasAddedFiles) {
+      fitMarkers();
+    }
+  });
 </script>
 
 {#if !isSidebarOpen}
@@ -27,6 +52,7 @@
 
 {#if isSidebarOpen}
   <form
+    bind:clientWidth={formWidth}
     class="absolute z-10 inset-0 left-auto w-1/5 min-w-20 max-w-72 bg-gray-800/80 backdrop-blur flex flex-col"
   >
     <header class="flex justify-between items-center p-4">

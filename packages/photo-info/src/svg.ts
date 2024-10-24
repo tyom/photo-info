@@ -55,8 +55,6 @@ export function createFovMarkerSvg({
     `.trim();
   }
 
-  console.log('!!', buildAngledPolygon());
-
   return `
     <svg width="${viewBoxSize}" height="${viewBoxSize}"
       viewBox="-${viewBoxSize / 2} -${viewBoxSize / 2} ${viewBoxSize} ${viewBoxSize}">

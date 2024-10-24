@@ -1,4 +1,4 @@
-import { getPhotoInfo } from 'photo-info';
+import { getPhotoInfo, type Position } from 'photo-info';
 
 const isDebugging = import.meta.env.MODE === 'development';
 
@@ -10,17 +10,22 @@ export type Photo = {
 export function createPhotoGallery() {
   let photos = $state<Photo[]>([]);
   let selectedPhoto = $state<Photo | null>(null);
-  let status = $state<'idle' | 'updating' | 'complete'>('idle');
+
+  const geoLocatedPhotos = $derived(
+    photos.filter((p): p is Photo & { gpsPosition: Position } =>
+      Boolean(p.gpsPosition),
+    ),
+  );
 
   return {
     get photos() {
       return photos;
     },
+    get geoLocatedPhotos() {
+      return geoLocatedPhotos;
+    },
     get selectedPhoto() {
       return selectedPhoto;
-    },
-    get status() {
-      return status;
     },
 
     async addPhoto(file: File) {
@@ -41,8 +46,6 @@ export function createPhotoGallery() {
         });
       }
 
-      status = 'updating';
-
       photos = [
         ...photos,
         {
@@ -55,7 +58,6 @@ export function createPhotoGallery() {
     async addPhotos(files: File[]) {
       const acceptedFilesPromises = files.map(this.addPhoto);
       await Promise.all(acceptedFilesPromises);
-      status = 'complete';
     },
     selectPhoto(id: string) {
       selectedPhoto = photos.find((p) => p.id === id) ?? null;
