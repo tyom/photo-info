@@ -1,9 +1,5 @@
 import * as ExifReader from 'exifreader';
-import {
-  calculateAngleOfView,
-  divideArrayItems,
-  reformatDate,
-} from './utils.ts';
+import { calculateAngleOfView, divideByNext, reformatDate } from './utils.ts';
 
 type Latitude = number;
 type Longitude = number;
@@ -95,7 +91,7 @@ async function parseExifData(file: File) {
         (lat) => +lat * latRef!,
       );
       const altitude = getExifValue('GPSAltitude', 'value', (value) =>
-        divideArrayItems(value as number[]),
+        divideByNext(value as number[]),
       );
 
       if (typeof longitude !== 'number' || typeof latitude !== 'number') {
@@ -140,7 +136,7 @@ export async function getPhotoInfo(
     parseFloat((+degrees).toFixed(2)),
   );
   const focalLength = getExifValue('FocalLength', 'value', (value) =>
-    divideArrayItems(value as number[]),
+    divideByNext(value as number[]),
   )!;
   const focalLengthIn35mm = getExifValue(
     'FocalLengthIn35mmFilm',
@@ -162,7 +158,7 @@ export async function getPhotoInfo(
   if (getExifValue('GPSSpeed', 'value')) {
     gpsSpeed = {
       value: getExifValue('GPSSpeed', 'value', (value) =>
-        divideArrayItems(value as number[]),
+        divideByNext(value as number[]),
       )!,
       unit: truncateSpeedUnit(getExifValue('GPSSpeedRef', 'description')!),
     };

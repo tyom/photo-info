@@ -90,11 +90,11 @@ export function calculateAngleOfView(
 }
 
 /**
- * Divides all items in an array by the first item.
+ * Divides a number in an array of numbers by the next item.
  * @param items - array of numbers
  * @param precision - number of decimal places to round to
  */
-export const divideArrayItems = (items: number[], precision = 4) =>
+export const divideByNext = (items: number[], precision = 4) =>
   parseFloat(items.reduce((a, c) => a / c).toFixed(precision));
 
 /**

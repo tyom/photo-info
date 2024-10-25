@@ -4,7 +4,7 @@ import {
   calculateAngleOfView,
   calculateCropFactor,
   calculateSensorSize,
-  divideArrayItems,
+  divideByNext,
   reformatDate,
 } from './utils';
 
@@ -34,10 +34,10 @@ test('calculates sensor size for different focal lengths', () => {
 });
 
 test('divide array items', () => {
-  expect(divideArrayItems([10, 2, 2])).toEqual(2.5);
-  expect(divideArrayItems([500, 5, 10])).toEqual(10);
-  expect(divideArrayItems([5, 3])).toEqual(1.6667);
-  expect(divideArrayItems([5, 3], 10)).toEqual(1.6666666667);
+  expect(divideByNext([10, 2, 2])).toEqual(2.5);
+  expect(divideByNext([500, 5, 10])).toEqual(10);
+  expect(divideByNext([5, 3])).toEqual(1.6667);
+  expect(divideByNext([5, 3], 10)).toEqual(1.6666666667);
 });
 
 test('format EXIF DateTime format to ISO', () => {
