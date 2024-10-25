@@ -31,14 +31,11 @@
       const markers = getMarkers();
       const zoomLevel = e.target.getZoom();
 
-      // console.log(markers.size, zoomLevel);
-
-      // markers.forEach((marker, idx) => {
-      //   const { bearing, angleOfView } = gallery.photos[idx];
-      //   marker.setIcon(
-      //     zoomLevel > 15 ? createIcon({ bearing, angleOfView }) : createIcon(),
-      //   );
-      // });
+      markers.forEach((marker) => {
+        setSvgMarkerState(marker, {
+          'angle-of-view': zoomLevel > 15 ? '' : null,
+        });
+      });
     });
 
     return {

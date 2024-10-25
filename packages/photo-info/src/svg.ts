@@ -46,7 +46,7 @@ export function createFovMarkerSvg({
           />
         </mask>
       </defs>
-      <g transform="rotate(${bearing} 0 0)">
+      <g transform="rotate(${bearing} 0 0)" class="angle-of-view">
         <polygon
           points="0,0 ${-baseHalfLength / 2},${-viewBoxSize / 2} ${baseHalfLength / 2},${-viewBoxSize / 2}"
           fill="${fovColor}"

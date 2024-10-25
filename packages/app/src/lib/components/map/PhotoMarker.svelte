@@ -45,10 +45,16 @@
   :global(.fov-marker [data-active] .circle-outer) {
     fill: #fff4;
   }
+  :global(.fov-marker .angle-of-view) {
+    opacity: 0;
+  }
   :global(.fov-marker .circle-inner) {
     fill: #285eff;
   }
   :global(.fov-marker [data-active] .circle-inner) {
     fill: #ff8800;
+  }
+  :global(.fov-marker [data-angle-of-view] .angle-of-view) {
+    opacity: 1;
   }
 </style>
