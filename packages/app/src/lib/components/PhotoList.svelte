@@ -7,16 +7,15 @@
     fitToMarkerByPosition,
     type Photo,
   } from '$runes';
-  import { Button } from './ui/button';
-  import { Label } from './ui/label';
-  import * as RadioGroup from './ui/radio-group';
-  import IconGpsOn from 'virtual:icons/ic/baseline-gps-fixed';
-  import IconGpsOff from 'virtual:icons/ic/baseline-gps-off';
   import IconClose from 'virtual:icons/ic/baseline-close';
   import IconRemove from 'virtual:icons/ic/baseline-remove-circle';
   import IconPhotoGallery from 'virtual:icons/ic/baseline-photo-library';
   import { cn } from '$lib/utils';
   import { getMarkerByPhoto } from '$lib/map';
+  import { Button } from './ui/button';
+  import { Label } from './ui/label';
+  import ImagePreview from './ImagePreview.svelte';
+  import * as RadioGroup from './ui/radio-group';
 
   let isSidebarOpen = $state(true);
   let formWidth = $state(0);
@@ -66,8 +65,6 @@
       fitMarkers();
     }
   });
-
-  const getAspectRatio = (photo: Photo) => `${photo.width / photo.height}/1`;
 </script>
 
 {#if !isSidebarOpen}
@@ -116,37 +113,7 @@
               aria-label="Card"
               on:click={() => handlePhotoClick(photo)}
             />
-            <figure
-              class="relative w-full"
-              style="aspect-ratio: {getAspectRatio(photo)}"
-            >
-              <img
-                src={URL.createObjectURL(photo.file)}
-                alt=""
-                width="auto"
-                height="auto"
-                class="image-preview"
-                onload={(evt) => {
-                  evt.target.classList.add('loaded');
-                }}
-              />
-              <figcaption
-                class="flex gap-2 items-center absolute inset-0 top-auto z-2 bg-black/50 p-2 text-xs"
-              >
-                <span class="icons">
-                  {#if photo.gpsPosition}
-                    <span title="Geolocated photo">
-                      <IconGpsOn class="text-green-500" />
-                    </span>
-                  {:else}
-                    <span title="Non-geolocated photo">
-                      <IconGpsOff class="text-red-500" />
-                    </span>
-                  {/if}
-                </span>
-                <span class="text-center">{photo.file.name}</span>
-              </figcaption>
-            </figure>
+            <ImagePreview {photo} lockAspectRatio />
             <Button
               variant="ghost"
               size="icon"
@@ -170,13 +137,3 @@
     />
   </form>
 {/if}
-
-<style>
-  .image-preview {
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
-  }
-  :global(.image-preview.loaded) {
-    opacity: 1;
-  }
-</style>
