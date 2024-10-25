@@ -8,6 +8,7 @@
   type $$Props = {
     children?: Snippet;
     options?: MapOptions;
+    layers?: { urlTemplate: string; layerOptions: TileLayerOptions }[];
   };
 
   let { children, options }: $$Props = $props();
@@ -16,6 +17,10 @@
 
   function mapAction(container: HTMLDivElement) {
     map = createMap(container, options);
+
+    for (const { urlTemplate, layerOptions } of layers) {
+      tileLayer(urlTemplate, layerOptions).addTo(map);
+    }
 
     map.on('zoomend', (e) => {
       const markers = getMarkers();

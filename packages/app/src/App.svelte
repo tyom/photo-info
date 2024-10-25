@@ -2,7 +2,7 @@
   import { type MapOptions } from 'leaflet';
   import { ModeWatcher } from 'mode-watcher';
   import { PhotoList, SelectedPhoto } from '$lib/components';
-  import { Map, TileLayer, PhotoMarker } from '$lib/components/map';
+  import { Map, PhotoMarker } from '$lib/components/map';
   import { gallery } from '$runes';
   import { tileLayers } from '../layers';
   import './app.css';
@@ -14,10 +14,7 @@
 </script>
 
 <main>
-  <Map options={mapOptions}>
-    {#each tileLayers as { urlTemplate, layerOptions }}
-      <TileLayer url={urlTemplate} options={layerOptions} />
-    {/each}
+  <Map options={mapOptions} layers={tileLayers}>
     {#each gallery.geoLocatedPhotos as { gpsPosition, ...photo }}
       <PhotoMarker position={gpsPosition} {...photo} />
     {/each}
