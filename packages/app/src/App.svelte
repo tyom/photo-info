@@ -1,8 +1,8 @@
 <script lang="ts">
   import { type MapOptions } from 'leaflet';
   import { ModeWatcher } from 'mode-watcher';
-  import { Map, PhotoMarker, MapStyleSelector } from '$lib/components/map';
-  import { PhotoList, SelectedPhoto } from '$lib/components';
+  import { Map, PhotoMarker, MapStyleSelector } from '$components/map';
+  import { PhotoList, SelectedPhoto } from '$components';
   import { gallery } from '$runes';
   import './app.css';
 

@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { Select } from '$lib/components';
+  import { Select } from '$components';
   import { getMapStyle, setMapStyle } from '$runes';
   import { tileLayers } from '$map-styles';
 
-  let { class: className } = $props();
+  let { class: className = '' } = $props();
 
   const mapStyle = getMapStyle();
 
   // For some reason selected requires the value to be an object
   // https://github.com/huntabyte/shadcn-svelte/issues/1132
-  const { id, name } = tileLayers.find((x) => x.id === mapStyle);
+  const { id, name } = tileLayers.find((x) => x.id === mapStyle) ?? {};
   let selected = $state({ value: id, label: name });
 </script>
 

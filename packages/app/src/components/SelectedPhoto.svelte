@@ -1,8 +1,9 @@
 <script lang="ts">
   import IconCheck from 'virtual:icons/ic/baseline-check';
   import IconClose from 'virtual:icons/ic/baseline-close';
-  import { Button, ImagePreview } from '$lib/components';
   import { fitToMarkerByPosition, gallery } from '$runes';
+  import { Button } from './ui/button';
+  import ImagePreview from './ImagePreview.svelte';
 
   function handleZoomToPhoto() {
     if (!gallery.selectedPhoto?.gpsPosition) return;

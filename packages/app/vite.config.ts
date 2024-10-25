@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '$map-styles': path.resolve('./src/map-styles.ts'),
+      $components: path.resolve('./src/components'),
       $runes: path.resolve('./src/runes'),
       $lib: path.resolve('./src/lib'),
     },

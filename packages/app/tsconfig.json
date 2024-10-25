@@ -4,10 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "$map-styles": ["./src/map-styles.ts"],
-      "$lib": ["./src/lib"],
+      "$components": ["./src/components"],
+      "$components/*": ["./src/components/*"],
       "$lib/*": ["./src/lib/*"],
-      "$runes": ["./src/runes"],
-      "$runes/*": ["./src/runes/*"]
+      "$runes": ["./src/runes"]
     }
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

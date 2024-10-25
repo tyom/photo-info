@@ -14,8 +14,8 @@
   import { getMarkerByPhoto } from '$lib/map';
   import { Button } from './ui/button';
   import { Label } from './ui/label';
-  import ImagePreview from './ImagePreview.svelte';
   import * as RadioGroup from './ui/radio-group';
+  import ImagePreview from './ImagePreview.svelte';
 
   let formWidth = $state(0);
   let hasAddedFiles = $state(false);

@@ -2,7 +2,7 @@
   import { type Photo } from '$runes';
   import IconGpsOn from 'virtual:icons/ic/baseline-gps-fixed';
   import IconGpsOff from 'virtual:icons/ic/baseline-gps-off';
-  import { cn } from '$lib/utils.ts';
+  import { cn } from '$lib/utils';
 
   type $Props = {
     photo: Photo;

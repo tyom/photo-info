@@ -1,24 +1,18 @@
 <script lang="ts">
   import { type Snippet } from 'svelte';
-  import {
-    MapOptions,
-    Map as LeafletMap,
-    tileLayer,
-    TileLayerOptions,
-  } from 'leaflet';
+  import * as L from 'leaflet';
   import { createMap, gallery, getMarkers, setMapStyle } from '$runes';
   import { getMarkerByPhoto, setSvgMarkerState } from '$lib/map';
-  import * as L from 'leaflet';
 
   type $$Props = {
-    layer: { urlTemplate: string; layerOptions: TileLayerOptions };
+    layer: { urlTemplate: string; layerOptions: L.TileLayerOptions };
     children?: Snippet;
-    options?: MapOptions;
+    options?: L.MapOptions;
   };
 
   let { children, options }: $$Props = $props();
 
-  let map: LeafletMap;
+  let map: L.Map;
 
   function mapAction(container: HTMLDivElement) {
     map = createMap(container, options);
