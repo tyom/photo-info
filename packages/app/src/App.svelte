@@ -3,8 +3,9 @@
   import { ModeWatcher } from 'mode-watcher';
   import { PhotoList, SelectedPhoto } from '$lib/components';
   import { Map, PhotoMarker } from '$lib/components/map';
+  import TileSelector from '$lib/components/TileSelector.svelte';
   import { gallery } from '$runes';
-  import { tileLayers } from '../layers';
+  import { tileLayers } from './layers';
   import './app.css';
 
   const mapOptions: MapOptions = {
@@ -14,13 +15,14 @@
 </script>
 
 <main>
-  <Map options={mapOptions} layers={tileLayers}>
+  <Map options={mapOptions} layer={tileLayers.satellite}>
     {#each gallery.geoLocatedPhotos as { gpsPosition, ...photo }}
       <PhotoMarker position={gpsPosition} {...photo} />
     {/each}
   </Map>
   <PhotoList />
   <SelectedPhoto />
+  <TileSelector />
   <ModeWatcher />
 </main>
 

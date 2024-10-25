@@ -11,21 +11,19 @@
   import * as L from 'leaflet';
 
   type $$Props = {
+    layer: { urlTemplate: string; layerOptions: TileLayerOptions };
     children?: Snippet;
     options?: MapOptions;
-    layers?: { urlTemplate: string; layerOptions: TileLayerOptions }[];
   };
 
-  let { children, options, layers = [] }: $$Props = $props();
+  let { children, options, layer }: $$Props = $props();
 
   let map: LeafletMap;
 
   function mapAction(container: HTMLDivElement) {
     map = createMap(container, options);
 
-    for (const { urlTemplate, layerOptions } of layers) {
-      tileLayer(urlTemplate, layerOptions).addTo(map);
-    }
+    tileLayer(layer.urlTemplate, layer.layerOptions).addTo(map);
 
     map.on('zoomend', (e) => {
       const markers = getMarkers();
