@@ -2,6 +2,7 @@
   import Dropzone from 'svelte-file-dropzone';
   import {
     gallery,
+    removeMarker,
     fitToAllMarkers,
     fitToMarkerByPosition,
     type Photo,
@@ -12,8 +13,10 @@
   import IconGpsOn from 'virtual:icons/ic/baseline-gps-fixed';
   import IconGpsOff from 'virtual:icons/ic/baseline-gps-off';
   import IconClose from 'virtual:icons/ic/baseline-close';
+  import IconRemove from 'virtual:icons/ic/baseline-remove-circle';
   import IconPhotoGallery from 'virtual:icons/ic/baseline-photo-library';
   import { cn } from '$lib/utils';
+  import { getMarkerByPhoto } from '$lib/map';
 
   let isSidebarOpen = $state(true);
   let formWidth = $state(0);
@@ -46,6 +49,16 @@
       paddingTopLeft: [50, 50],
       paddingBottomRight: [isSidebarOpen ? formWidth : 0, 50],
     });
+  }
+
+  function handleRemovePhoto(photo: Photo) {
+    gallery.removePhoto(photo);
+
+    const marker = getMarkerByPhoto(photo);
+    if (marker) {
+      removeMarker(marker);
+      fitMarkers();
+    }
   }
 
   $effect(() => {
@@ -94,7 +107,7 @@
         {#each gallery.photos as photo}
           <Label
             for={photo.file.name}
-            class="border-muted hover:border-white/30 [&:has([data-state=checked])]:border-primary flex flex-col items-center justify-between border-2 bg-transparent shadow cursor-pointer"
+            class="group relative border-muted hover:border-white/30 [&:has([data-state=checked])]:border-primary flex flex-col items-center justify-between border-2 bg-transparent shadow cursor-pointer"
           >
             <RadioGroup.Item
               value={photo.file.name}
@@ -134,6 +147,14 @@
                 <span class="text-center">{photo.file.name}</span>
               </figcaption>
             </figure>
+            <Button
+              variant="ghost"
+              size="icon"
+              class="opacity-0 group-hover:opacity-100 absolute right-1 top-1 bg-black/30 h-8 w-8 rounded-full hover:text-red-300 transition-opacity duration-200"
+              onclick={() => handleRemovePhoto(photo)}
+            >
+              <IconRemove class="text-lg" />
+            </Button>
           </Label>
         {/each}
       </RadioGroup.Root>

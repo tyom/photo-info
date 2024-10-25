@@ -55,6 +55,9 @@ export function createPhotoGallery() {
         },
       ];
     },
+    removePhoto(photo: Photo) {
+      photos = photos.filter((p) => p.id !== photo.id);
+    },
     async addPhotos(files: File[]) {
       const acceptedFilesPromises = files.map(this.addPhoto);
       await Promise.all(acceptedFilesPromises);

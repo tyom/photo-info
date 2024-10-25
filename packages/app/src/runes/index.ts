@@ -6,6 +6,7 @@ export {
   createMap,
   getMap,
   addMarker,
+  removeMarker,
   getMarkers,
   fitToAllMarkers,
   fitToMarkerByPosition,

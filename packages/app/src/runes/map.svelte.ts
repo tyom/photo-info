@@ -39,6 +39,12 @@ export function addMarker(marker: L.Marker) {
   }
 }
 
+export function removeMarker(marker: L.Marker) {
+  const latLngKey = marker.getLatLng().toString();
+  markers.delete(latLngKey);
+  marker.remove();
+}
+
 export function fitToAllMarkers(options: FlyToOptions) {
   if (markers.size === 0) {
     return;
