@@ -17,16 +17,20 @@
   import ImagePreview from './ImagePreview.svelte';
   import * as RadioGroup from './ui/radio-group';
 
-  let isSidebarOpen = $state(true);
   let formWidth = $state(0);
   let hasAddedFiles = $state(false);
   let isDraggingOver = $state(false);
 
-  const fitMarkers = () =>
-    fitToAllMarkers({
-      paddingTopLeft: [50, 50],
-      paddingBottomRight: [isSidebarOpen ? formWidth : 0, 50],
-    });
+  const edgePadding = 50;
+  const getPadding = () => ({
+    paddingTopLeft: [edgePadding, edgePadding],
+    paddingBottomRight: [
+      gallery.sidebarOpen ? formWidth + edgePadding : edgePadding,
+      edgePadding,
+    ],
+  });
+
+  const fitMarkers = () => fitToAllMarkers(getPadding());
 
   async function handleFileDrop(e: CustomEvent<{ acceptedFiles: File[] }>) {
     const { acceptedFiles } = e.detail;
@@ -44,14 +48,15 @@
   function handlePhotoClick(photo: Photo) {
     if (!photo.gpsPosition) return;
 
-    fitToMarkerByPosition(photo.gpsPosition, {
-      paddingTopLeft: [50, 50],
-      paddingBottomRight: [isSidebarOpen ? formWidth : 0, 50],
-    });
+    fitToMarkerByPosition(photo.gpsPosition, getPadding());
   }
 
   function handleRemovePhoto(photo: Photo) {
     gallery.removePhoto(photo);
+
+    if (gallery.selectedPhoto?.id === photo.id) {
+      gallery.selectPhoto('');
+    }
 
     const marker = getMarkerByPhoto(photo);
     if (marker) {
@@ -67,15 +72,15 @@
   });
 </script>
 
-{#if !isSidebarOpen}
+{#if !gallery.sidebarOpen}
   <div class="absolute z-10 right-0 top-0 m-4">
-    <Button onclick={() => (isSidebarOpen = true)} class="flex gap-2">
+    <Button onclick={gallery.toggleSidebar} class="flex gap-2">
       <IconPhotoGallery /> Add Photos</Button
     >
   </div>
 {/if}
 
-{#if isSidebarOpen}
+{#if gallery.sidebarOpen}
   <form
     bind:clientWidth={formWidth}
     class="absolute z-10 inset-0 left-auto w-1/5 min-w-20 max-w-72 bg-gray-800/80 backdrop-blur flex flex-col"
@@ -86,7 +91,7 @@
         <Button
           variant="ghost"
           size="icon"
-          onclick={() => (isSidebarOpen = false)}
+          onclick={() => gallery.toggleSidebar(false)}
         >
           <IconClose />
         </Button>

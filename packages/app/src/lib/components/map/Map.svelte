@@ -6,7 +6,7 @@
     tileLayer,
     TileLayerOptions,
   } from 'leaflet';
-  import { createMap, gallery, getMarkers } from '$runes';
+  import { createMap, gallery, getMarkers, setMapStyle } from '$runes';
   import { getMarkerByPhoto, setSvgMarkerState } from '$lib/map';
   import * as L from 'leaflet';
 
@@ -16,14 +16,14 @@
     options?: MapOptions;
   };
 
-  let { children, options, layer }: $$Props = $props();
+  let { children, options }: $$Props = $props();
 
   let map: LeafletMap;
 
   function mapAction(container: HTMLDivElement) {
     map = createMap(container, options);
 
-    tileLayer(layer.urlTemplate, layer.layerOptions).addTo(map);
+    setMapStyle();
 
     map.on('zoomend', (e) => {
       const markers = getMarkers();

@@ -2,6 +2,9 @@ import { getPhotoInfo, type Position } from 'photo-info';
 
 const isDebugging = import.meta.env.MODE === 'development';
 
+const LOCAL_STORAGE_KEY = 'photo-info:sidebarOpen';
+const defaultSidebarOpen = localStorage.getItem(LOCAL_STORAGE_KEY ?? 'true');
+
 export type Photo = {
   file: File;
   id: string;
@@ -10,6 +13,7 @@ export type Photo = {
 export function createPhotoGallery() {
   let photos = $state<Photo[]>([]);
   let selectedPhoto = $state<Photo | null>(null);
+  let sidebarOpen = $state(defaultSidebarOpen === 'true');
 
   const geoLocatedPhotos = $derived(
     photos.filter((p): p is Photo & { gpsPosition: Position } =>
@@ -26,6 +30,9 @@ export function createPhotoGallery() {
     },
     get selectedPhoto() {
       return selectedPhoto;
+    },
+    get sidebarOpen() {
+      return sidebarOpen;
     },
 
     async addPhoto(file: File) {
@@ -54,6 +61,14 @@ export function createPhotoGallery() {
           ...photoInfo,
         },
       ];
+    },
+    toggleSidebar(value?: boolean) {
+      if (typeof value === 'boolean') {
+        sidebarOpen = value;
+      } else {
+        sidebarOpen = !sidebarOpen;
+      }
+      localStorage.setItem(LOCAL_STORAGE_KEY, sidebarOpen.toString());
     },
     removePhoto(photo: Photo) {
       photos = photos.filter((p) => p.id !== photo.id);

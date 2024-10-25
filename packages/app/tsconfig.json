@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "$map-styles": ["./src/map-styles.ts"],
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"],
       "$runes": ["./src/runes"],

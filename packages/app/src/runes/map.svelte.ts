@@ -1,6 +1,14 @@
 import * as L from 'leaflet';
+import { tileLayers } from '$map-styles';
+
+type MapStyle = (typeof tileLayers)[number]['id'];
+
+const LOCAL_STORAGE_KEY = 'photo-info:mapStyle';
+const defaultMapStyle =
+  (localStorage.getItem(LOCAL_STORAGE_KEY) as MapStyle) ?? tileLayers[0].id;
 
 let map = $state<L.Map | null>(null);
+let mapStyle = $state<MapStyle>(defaultMapStyle);
 const markers = $state<Map<string, L.Marker>>(new Map());
 
 type FlyToOptions = {
@@ -22,6 +30,7 @@ export function createMap(container: HTMLDivElement, options?: L.MapOptions) {
   );
 
   map = m;
+
   return m;
 }
 
@@ -68,5 +77,27 @@ export function fitToMarkerByPosition(
   map?.flyToBounds(markerGroup.getBounds(), options);
 }
 
+export function setMapStyle(layerId: typeof mapStyle = mapStyle) {
+  if (!map) return;
+
+  mapStyle = layerId;
+  localStorage.setItem(LOCAL_STORAGE_KEY, layerId);
+
+  const layer = tileLayers.find((x) => x.id === layerId);
+
+  if (!layer) {
+    throw new Error(`Layer with id ${layerId} not found`);
+  }
+
+  map.eachLayer((layer) => {
+    if (layer instanceof L.TileLayer) {
+      map?.removeLayer(layer);
+    }
+  });
+
+  L.tileLayer(layer.urlTemplate, layer.layerOptions).addTo(map);
+}
+
 export const getMap = () => map;
+export const getMapStyle = () => mapStyle;
 export const getMarkers = () => markers;

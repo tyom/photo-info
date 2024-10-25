@@ -1,11 +1,9 @@
 <script lang="ts">
   import { type MapOptions } from 'leaflet';
   import { ModeWatcher } from 'mode-watcher';
+  import { Map, PhotoMarker, MapStyleSelector } from '$lib/components/map';
   import { PhotoList, SelectedPhoto } from '$lib/components';
-  import { Map, PhotoMarker } from '$lib/components/map';
-  import TileSelector from '$lib/components/TileSelector.svelte';
   import { gallery } from '$runes';
-  import { tileLayers } from './layers';
   import './app.css';
 
   const mapOptions: MapOptions = {
@@ -15,14 +13,14 @@
 </script>
 
 <main>
-  <Map options={mapOptions} layer={tileLayers.satellite}>
+  <Map options={mapOptions}>
     {#each gallery.geoLocatedPhotos as { gpsPosition, ...photo }}
       <PhotoMarker position={gpsPosition} {...photo} />
     {/each}
   </Map>
   <PhotoList />
   <SelectedPhoto />
-  <TileSelector />
+  <MapStyleSelector />
   <ModeWatcher />
 </main>
 
