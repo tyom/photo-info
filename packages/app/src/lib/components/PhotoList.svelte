@@ -36,16 +36,20 @@
     setTimeout(() => {
       hasAddedFiles = true;
       fitMarkers();
-    }, 800);
+    }, 500);
+  }
+
+  function handlePhotoClick(photo: Photo) {
+    if (!photo.gpsPosition) return;
+
+    fitToMarkerByPosition(photo.gpsPosition, {
+      paddingTopLeft: [50, 50],
+      paddingBottomRight: [formWidth, 50],
+    });
   }
 
   $effect(() => {
-    if (gallery.selectedPhoto?.gpsPosition) {
-      fitToMarkerByPosition(gallery.selectedPhoto.gpsPosition, {
-        paddingTopLeft: [50, 50],
-        paddingBottomRight: [formWidth, 50],
-      });
-    } else if (hasAddedFiles) {
+    if (!gallery.selectedPhoto?.gpsPosition) {
       fitMarkers();
     }
   });
@@ -97,6 +101,7 @@
               id={photo.file.name}
               class="sr-only"
               aria-label="Card"
+              on:click={() => handlePhotoClick(photo)}
             />
             <figure
               class="relative w-full"

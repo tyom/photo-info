@@ -1,6 +1,7 @@
-import { createPhotoGallery } from '$runes/photos.svelte';
+import { createPhotoGallery } from './photos.svelte';
 
-export { type Photo } from '$runes/photos.svelte';
+export { type Photo } from './photos.svelte';
+
 export {
   createMap,
   getMap,
@@ -8,6 +9,6 @@ export {
   getMarkers,
   fitToAllMarkers,
   fitToMarkerByPosition,
-} from '$runes/map.svelte';
+} from './map.svelte';
 
 export const gallery = createPhotoGallery();
