@@ -80,5 +80,5 @@ export function createFovMarkerSvg({
         stroke-width="${circleStrokeWidth}"
       />
     </svg>
-  `;
+  `.trim();
 }

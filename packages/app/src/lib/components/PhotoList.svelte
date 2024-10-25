@@ -23,7 +23,7 @@
   const fitMarkers = () =>
     fitToAllMarkers({
       paddingTopLeft: [50, 50],
-      paddingBottomRight: [formWidth, 50],
+      paddingBottomRight: [isSidebarOpen ? formWidth : 0, 50],
     });
 
   async function handleFileDrop(e: CustomEvent<{ acceptedFiles: File[] }>) {
@@ -44,7 +44,7 @@
 
     fitToMarkerByPosition(photo.gpsPosition, {
       paddingTopLeft: [50, 50],
-      paddingBottomRight: [formWidth, 50],
+      paddingBottomRight: [isSidebarOpen ? formWidth : 0, 50],
     });
   }
 

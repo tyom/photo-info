@@ -15,31 +15,20 @@
   const { position, angleOfView, bearing, size = 300 }: $Props = $props();
 
   let marker: L.Marker;
-  let normalIcon = createIcon({ angleOfView, bearing, size, isActive: false });
-  let activeIcon = createIcon({ angleOfView, bearing, size, isActive: true });
+  let icon = createIcon({ angleOfView, bearing, size });
 
   $effect(() => {
     const map = getMap();
 
     if (map) {
-      marker = L.marker(position, { icon: normalIcon });
+      marker = L.marker(position, { icon });
 
       marker.on('click', (evt) => {
         const activePhoto = getPhotoByMarker(evt.sourceTarget);
         gallery.selectPhoto(activePhoto?.id ?? '');
-
-        marker.setIcon(activeIcon);
       });
 
       addMarker(marker);
-    }
-  });
-
-  $effect(() => {
-    if (!gallery.selectedPhoto) {
-      console.log('resetting icon');
-      // FIXME: Only resets the last icon :(
-      marker?.setIcon(normalIcon);
     }
   });
 </script>
@@ -52,5 +41,14 @@
   :global(.leaflet-marker-icon.fov-marker .circle-outer) {
     cursor: pointer;
     pointer-events: auto;
+  }
+  :global(.fov-marker [data-active] .circle-outer) {
+    fill: #fff4;
+  }
+  :global(.fov-marker .circle-inner) {
+    fill: #285eff;
+  }
+  :global(.fov-marker [data-active] .circle-inner) {
+    fill: #ff8800;
   }
 </style>

@@ -1,8 +1,13 @@
 <script lang="ts">
   import { type Snippet } from 'svelte';
-  import { MapOptions, Map as LeafletMap } from 'leaflet';
+  import {
+    MapOptions,
+    Map as LeafletMap,
+    tileLayer,
+    TileLayerOptions,
+  } from 'leaflet';
   import { createMap, gallery, getMarkers } from '$runes';
-  import { createIcon, getMarkerByPhoto } from '$lib/map';
+  import { getMarkerByPhoto, setSvgMarkerState } from '$lib/map';
   import * as L from 'leaflet';
 
   type $$Props = {
@@ -11,7 +16,7 @@
     layers?: { urlTemplate: string; layerOptions: TileLayerOptions }[];
   };
 
-  let { children, options }: $$Props = $props();
+  let { children, options, layers = [] }: $$Props = $props();
 
   let map: LeafletMap;
 
@@ -26,7 +31,7 @@
       const markers = getMarkers();
       const zoomLevel = e.target.getZoom();
 
-      console.log(markers.size, zoomLevel);
+      // console.log(markers.size, zoomLevel);
 
       // markers.forEach((marker, idx) => {
       //   const { bearing, angleOfView } = gallery.photos[idx];
@@ -41,49 +46,22 @@
     };
   }
 
+  // Handle marker icons
   $effect(() => {
-    if (!gallery.selectedPhoto) {
-      const markers = getMarkers();
-
-      // markers.forEach((marker) => {
-      //   if (marker.options.icon?.options) {
-      //     marker.setIcon(
-      //       L.divIcon({
-      //         className: 'fov-marker',
-      //         html: marker.options.icon.options.html,
-      //       }),
-      //     );
-      //   }
-      // });
-    }
-  });
-
-  $effect(() => {
-    const markers = getMarkers();
-
-    // markers.forEach((marker, idx) => {
-    //   const { bearing, angleOfView } = gallery.photos[idx];
-    //   marker.setIcon(
-    //     createIcon({
-    //       bearing,
-    //       angleOfView,
-    //       size: 300,
-    //     }),
-    //   );
-    // });
+    map.eachLayer((layer) => {
+      // Deactivate all markers
+      if (layer instanceof L.Marker) {
+        setSvgMarkerState(layer, { active: null });
+      }
+    });
 
     if (gallery.selectedPhoto) {
-      const { angleOfView, bearing } = gallery.selectedPhoto;
       const marker = getMarkerByPhoto(gallery.selectedPhoto);
-
-      marker?.setIcon(
-        createIcon({
-          bearing,
-          angleOfView,
-          size: 300,
-          isActive: true,
-        }),
-      );
+      // Activate the selected marker
+      if (marker) {
+        setSvgMarkerState(marker, { active: '' });
+      }
+    } else {
     }
   });
 </script>

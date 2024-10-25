@@ -3,6 +3,8 @@ import { createFovMarkerSvg, type Position } from 'photo-info';
 import { latLng } from 'leaflet';
 import { gallery, getMarkers, type Photo } from '$runes';
 
+const parser = new DOMParser();
+
 type MakerOptions = {
   gpsPosition: Position;
   angleOfView?: number | null;
@@ -28,6 +30,35 @@ export function createIcon({
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   });
+}
+
+export function setSvgMarkerState(
+  marker: L.Marker,
+  state: Record<string, string | null> = {},
+) {
+  const markerIcon = marker.getIcon() as L.DivIcon;
+  const iconHtml = markerIcon.options.html as string;
+
+  if (!iconHtml) {
+    throw new Error('Icon HTML not found');
+  }
+
+  const svg = parser.parseFromString(iconHtml, 'image/svg+xml').documentElement;
+
+  Object.entries(state).forEach(([key, value]) => {
+    if (value === null) {
+      svg.removeAttribute(`data-${key}`);
+    } else {
+      svg.setAttribute(`data-${key}`, value);
+    }
+  });
+
+  marker.setIcon(
+    L.divIcon({
+      ...markerIcon.options,
+      html: svg.outerHTML,
+    }),
+  );
 }
 
 export function createMarker({
