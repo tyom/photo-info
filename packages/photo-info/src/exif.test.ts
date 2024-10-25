@@ -73,7 +73,7 @@ test('returns location data for 24mm lens', async () => {
     dateTime: '2024-10-19T01:01:24',
     exposureProgram: 'Normal program',
     exposureTime: '1/20',
-    fNumber: 'f/1.7799',
+    fNumber: 'f/1.78',
     orientation: 'landscape',
     frontCamera: false,
   });

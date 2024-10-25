@@ -149,10 +149,9 @@ export async function getPhotoInfo(
   const isPortrait = ['right-top', 'left-top'].includes(imageOrientation);
   const dateTime = getExifValue('DateTime', 'description');
 
-  let fNumber = getExifValue('FNumber', 'description');
-  if (fNumber) {
-    fNumber = fNumber.substring(0, 8);
-  }
+  const fNumber = getExifValue('FNumber', 'value', (value) =>
+    divideByNext(value as number[]),
+  );
 
   let gpsSpeed: { value: number; unit: string } | null = null;
   if (getExifValue('GPSSpeed', 'value')) {
@@ -196,7 +195,7 @@ export async function getPhotoInfo(
     dateTime: reformatDate(dateTime),
     exposureTime: getExifValue('ExposureTime', 'description'),
     exposureProgram: getExifValue('ExposureProgram', 'description'),
-    fNumber,
+    fNumber: `f/${fNumber}`,
     lens:
       getExifValue('Lens', 'value') ?? getExifValue('LensModel', 'description'),
   };

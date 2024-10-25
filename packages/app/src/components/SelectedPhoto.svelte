@@ -93,6 +93,10 @@
           <dt>Angle of view</dt>
           <dd>{gallery.selectedPhoto?.angleOfView}°</dd>
         {/if}
+        {#if gallery.selectedPhoto?.bearing}
+          <dt>Bearing</dt>
+          <dd>{gallery.selectedPhoto?.bearing}°</dd>
+        {/if}
         {#if gallery.selectedPhoto?.frontCamera}
           <dt>Front camera</dt>
           <dd><IconCheck /></dd>
@@ -109,10 +113,12 @@
                 <span class="opacity-50">Longitude:</span>
                 {gallery.selectedPhoto?.gpsPosition?.[1]}
               </li>
-              <li>
-                <span class="opacity-50">Altitude:</span>
-                {gallery.selectedPhoto?.gpsPosition?.[2]}
-              </li>
+              {#if gallery.selectedPhoto?.gpsPosition?.[2]}
+                <li>
+                  <span class="opacity-50">Altitude:</span>
+                  {gallery.selectedPhoto?.gpsPosition?.[2]}m
+                </li>
+              {/if}
             </ul>
           {:else}
             No GPS data
