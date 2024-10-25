@@ -74,7 +74,10 @@
 
 {#if !gallery.sidebarOpen}
   <div class="absolute z-10 right-0 top-0 m-4">
-    <Button onclick={gallery.toggleSidebar} class="flex gap-2">
+    <Button
+      onclick={gallery.toggleSidebar}
+      class="flex gap-2 bg-muted hover:bg-background text-foreground"
+    >
       <IconPhotoGallery /> Add Photos</Button
     >
   </div>

@@ -30,9 +30,22 @@ export const tileLayers = [
   },
   {
     id: 'stadia-allidade-smooth',
-    name: 'Stadia Alidade Dark',
+    name: 'Stadia Alidade',
     urlTemplate:
       'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}',
+    layerOptions: {
+      minZoom: 0,
+      maxZoom: 20,
+      attribution:
+        '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      ext: 'png',
+    },
+  },
+  {
+    id: 'stadia-allidade-smooth-dark',
+    name: 'Stadia Alidade Dark',
+    urlTemplate:
+      'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}',
     layerOptions: {
       minZoom: 0,
       maxZoom: 20,

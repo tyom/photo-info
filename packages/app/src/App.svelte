@@ -8,7 +8,7 @@
 
   const mapOptions: MapOptions = {
     center: [51.505, -0.09],
-    zoom: 11,
+    zoom: 13,
   };
 </script>
 
@@ -20,7 +20,7 @@
   </Map>
   <PhotoList />
   <SelectedPhoto />
-  <MapStyleSelector />
+  <MapStyleSelector class="absolute z-10 top-3 left-14" />
   <ModeWatcher />
 </main>
 
