@@ -1,17 +1,16 @@
-name: Build
+name: CI
+
 on:
-  push:
-    branches:
-      - '*'
-    tags-ignore:
-      - '*.*'
+  pull_request:
+    branches: [main, next, beta, alpha]
+
+env:
+  FORCE_COLOR: 3
 
 jobs:
-  build:
-    name: build and test
+  test:
+    name: Test
     runs-on: ubuntu-latest
-    env:
-      FORCE_COLOR: 3
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,16 +19,19 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 9
+          version: 10
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Check source
-        run: pnpm check && pnpm lint
+      - name: Check code
+        run: pnpm check
 
-      - name: Build packages
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
         run: pnpm build
 
-      - name: Test packages
+      - name: Test
         run: pnpm test
