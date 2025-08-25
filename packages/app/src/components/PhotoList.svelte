@@ -17,17 +17,19 @@
   import * as RadioGroup from './ui/radio-group';
   import ImagePreview from './ImagePreview.svelte';
 
+  // Constants for UI configuration
+  const MAP_EDGE_PADDING = 50;
+
   let formWidth = $state(0);
   let hasAddedFiles = $state(false);
   let isDraggingOver = $state(false);
 
-  const edgePadding = 50;
   const getPadding = () => ({
-    paddingTopLeft: [edgePadding, edgePadding],
+    paddingTopLeft: [MAP_EDGE_PADDING, MAP_EDGE_PADDING] as [number, number],
     paddingBottomRight: [
-      gallery.sidebarOpen ? formWidth + edgePadding : edgePadding,
-      edgePadding,
-    ],
+      gallery.sidebarOpen ? formWidth + MAP_EDGE_PADDING : MAP_EDGE_PADDING,
+      MAP_EDGE_PADDING,
+    ] as [number, number],
   });
 
   const fitMarkers = () => fitToAllMarkers(getPadding());
@@ -37,12 +39,11 @@
     await gallery.addPhotos(acceptedFiles);
 
     isDraggingOver = false;
+    hasAddedFiles = true;
 
-    // TODO: find a better way to ensure all markers are added
-    setTimeout(() => {
-      hasAddedFiles = true;
-      fitMarkers();
-    }, 500);
+    // Wait for next tick to ensure DOM updates are complete
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await fitMarkers();
   }
 
   function handlePhotoClick(photo: Photo) {
