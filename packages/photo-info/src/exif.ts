@@ -1,5 +1,11 @@
 import * as ExifReader from 'exifreader';
 import { calculateAngleOfView, divideByNext, reformatDate } from './utils.ts';
+import {
+  groupByCategory,
+  getDisplayName,
+  formatExifValue,
+  type ExifCategory,
+} from './exif-mappings.ts';
 
 type Latitude = number;
 type Longitude = number;
@@ -32,6 +38,16 @@ type PhotoInfo = {
   lens: string | null;
   originalTags?: ExifReader.Tags;
 };
+
+export type MappedExifData = {
+  [key: string]: {
+    value: unknown;
+    displayName: string;
+    formattedValue: string;
+  };
+};
+
+export type GroupedExifData = Record<ExifCategory, Record<string, unknown>>;
 
 const truncateSpeedUnit = (unit: string) => {
   const units: Record<string, string> = {
@@ -218,4 +234,69 @@ export async function getPhotoInfo(
   }
 
   return result;
+}
+
+/**
+ * Get photo information with user-friendly mapped EXIF data
+ * @param file - image file with EXIF data
+ * @returns mapped EXIF data with display names and formatted values
+ */
+export async function getMappedPhotoInfo(file: File): Promise<MappedExifData> {
+  const { tags } = await parseExifData(file);
+  const mapped: MappedExifData = {};
+
+  for (const [tagName, tag] of Object.entries(tags)) {
+    if (tag && typeof tag === 'object' && 'description' in tag) {
+      const displayName = getDisplayName(tagName);
+      const formattedValue = formatExifValue(tagName, tag.description);
+
+      mapped[tagName] = {
+        value: tag.value,
+        displayName,
+        formattedValue,
+      };
+    }
+  }
+
+  return mapped;
+}
+
+/**
+ * Get photo information grouped by category
+ * @param file - image file with EXIF data
+ * @returns EXIF data organized by categories
+ */
+export async function getGroupedPhotoInfo(
+  file: File,
+): Promise<GroupedExifData> {
+  const { tags } = await parseExifData(file);
+  const tagsWithDescriptions: Record<string, unknown> = {};
+
+  // Extract description values for grouping
+  for (const [tagName, tag] of Object.entries(tags)) {
+    if (tag && typeof tag === 'object' && 'description' in tag) {
+      tagsWithDescriptions[tagName] = tag.description;
+    }
+  }
+
+  return groupByCategory(tagsWithDescriptions);
+}
+
+/**
+ * Get comprehensive photo information including original, mapped, and grouped data
+ * @param file - image file with EXIF data
+ * @returns comprehensive photo information
+ */
+export async function getComprehensivePhotoInfo(file: File) {
+  const [original, mapped, grouped] = await Promise.all([
+    getPhotoInfo(file, true),
+    getMappedPhotoInfo(file),
+    getGroupedPhotoInfo(file),
+  ]);
+
+  return {
+    original,
+    mapped,
+    grouped,
+  };
 }

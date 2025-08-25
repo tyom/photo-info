@@ -1,4 +1,8 @@
-import { getPhotoInfo, type Position } from 'photo-info';
+import {
+  getPhotoInfo,
+  getComprehensivePhotoInfo,
+  type Position,
+} from 'photo-info';
 
 const isDebugging = import.meta.env.MODE === 'development';
 
@@ -64,6 +68,7 @@ export function createPhotoGallery() {
 
     async addPhoto(file: File) {
       try {
+        // Get basic photo info for the UI
         const { originalTags, ...photoInfo } = await getPhotoInfo(
           file,
           isDebugging,
@@ -84,10 +89,14 @@ export function createPhotoGallery() {
           return;
         }
 
-        if (originalTags && isDebugging) {
+        // Log comprehensive EXIF data in development mode
+        if (isDebugging) {
+          const comprehensiveInfo = await getComprehensivePhotoInfo(file);
           console.log(file.name, {
-            'EXIF data': originalTags,
-            'Extracted data': photoInfo,
+            'Basic Info': photoInfo,
+            'Raw EXIF Tags': originalTags,
+            'Mapped EXIF': comprehensiveInfo.mapped,
+            'Grouped by Category': comprehensiveInfo.grouped,
           });
         }
 
