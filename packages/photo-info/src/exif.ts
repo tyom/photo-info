@@ -14,7 +14,7 @@ type PhotoInfo = {
   model: string | null;
   angleOfView: number | null;
   focalLength: number | null;
-  focalLengthIn35mm: number;
+  focalLengthIn35mm: number | null;
   gpsPosition: Position | null;
   gpsSpeed: {
     value: number;
@@ -41,7 +41,15 @@ const truncateSpeedUnit = (unit: string) => {
 };
 
 async function parseExifData(file: File) {
-  const tags = await ExifReader.load(file);
+  let tags: ExifReader.Tags;
+
+  try {
+    tags = await ExifReader.load(file);
+  } catch (error) {
+    // If EXIF parsing fails, return minimal data structure
+    console.warn(`Failed to parse EXIF data for ${file.name}:`, error);
+    tags = {} as ExifReader.Tags;
+  }
 
   function getExifValue<
     K extends keyof ExifTag = keyof ExifTag,
@@ -80,16 +88,12 @@ async function parseExifData(file: File) {
       const latRef = getExifValue('GPSLatitudeRef', 'value', (v) =>
         v[0] === 'N' ? 1 : -1,
       );
-      const longitude = getExifValue(
-        'GPSLongitude',
-        'description',
-        (long) => +long * lonRef!,
-      );
-      const latitude = getExifValue(
-        'GPSLatitude',
-        'description',
-        (lat) => +lat * latRef!,
-      );
+      const longitude = lonRef
+        ? getExifValue('GPSLongitude', 'description', (long) => +long * lonRef)
+        : null;
+      const latitude = latRef
+        ? getExifValue('GPSLatitude', 'description', (lat) => +lat * latRef)
+        : null;
       const altitude = getExifValue('GPSAltitude', 'value', (value) =>
         divideByNext(value as number[]),
       );
@@ -137,13 +141,17 @@ export async function getPhotoInfo(
   );
   const focalLength = getExifValue('FocalLength', 'value', (value) =>
     divideByNext(value as number[]),
-  )!;
-  const focalLengthIn35mm = getExifValue(
-    'FocalLengthIn35mmFilm',
-    'value',
-  ) as number;
-  const width = getExifValue('Image Width', 'value') as number;
-  const height = getExifValue('Image Height', 'value') as number;
+  );
+  const focalLengthIn35mm = getExifValue('FocalLengthIn35mmFilm', 'value') as
+    | number
+    | null;
+  const width = getExifValue('Image Width', 'value') as number | null;
+  const height = getExifValue('Image Height', 'value') as number | null;
+
+  // Default dimensions if not available from EXIF
+  const finalWidth = width ?? 0;
+  const finalHeight = height ?? 0;
+
   const frontCamera = !!getExifValue('Lens', 'value')?.includes(' front ');
   const imageOrientation = getExifValue('Orientation', 'description') ?? '';
   const isPortrait = ['right-top', 'left-top'].includes(imageOrientation);
@@ -154,35 +162,40 @@ export async function getPhotoInfo(
   );
 
   let gpsSpeed: { value: number; unit: string } | null = null;
-  if (getExifValue('GPSSpeed', 'value')) {
+  const gpsSpeedValue = getExifValue('GPSSpeed', 'value', (value) =>
+    divideByNext(value as number[]),
+  );
+  const gpsSpeedRef = getExifValue('GPSSpeedRef', 'description');
+
+  if (gpsSpeedValue !== null && gpsSpeedRef !== null) {
     gpsSpeed = {
-      value: getExifValue('GPSSpeed', 'value', (value) =>
-        divideByNext(value as number[]),
-      )!,
-      unit: truncateSpeedUnit(getExifValue('GPSSpeedRef', 'description')!),
+      value: gpsSpeedValue,
+      unit: truncateSpeedUnit(gpsSpeedRef),
     };
   }
 
   let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
-  if (width === height) {
+  if (finalWidth === finalHeight) {
     orientation = 'square';
-  } else if (height > width || isPortrait) {
+  } else if (finalHeight > finalWidth || isPortrait) {
     orientation = 'portrait';
   }
 
-  let adjustedWidth = width;
-  let adjustedHeight = height;
+  let adjustedWidth = finalWidth;
+  let adjustedHeight = finalHeight;
   // Sometimes the width and the height are not aligned with the orientation
   // Assume that all photos with width > height are portrait
-  if (width > height && isPortrait) {
-    adjustedWidth = height;
-    adjustedHeight = width;
+  if (finalWidth > finalHeight && isPortrait) {
+    adjustedWidth = finalHeight;
+    adjustedHeight = finalWidth;
   }
 
   const result: PhotoInfo = {
     make: getExifValue('Make', 'description'),
     model: getExifValue('Model', 'description'),
-    angleOfView: calculateAngleOfView(focalLength, focalLengthIn35mm),
+    angleOfView: focalLength
+      ? calculateAngleOfView(focalLength, focalLengthIn35mm)
+      : null,
     focalLength: focalLength ? parseFloat(focalLength.toFixed(2)) : null,
     focalLengthIn35mm,
     gpsPosition,
@@ -195,7 +208,7 @@ export async function getPhotoInfo(
     dateTime: reformatDate(dateTime),
     exposureTime: getExifValue('ExposureTime', 'description'),
     exposureProgram: getExifValue('ExposureProgram', 'description'),
-    fNumber: `f/${fNumber}`,
+    fNumber: fNumber ? `f/${fNumber}` : null,
     lens:
       getExifValue('Lens', 'value') ?? getExifValue('LensModel', 'description'),
   };
