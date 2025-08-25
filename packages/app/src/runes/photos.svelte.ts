@@ -124,6 +124,7 @@ export function createPhotoGallery() {
             focalLengthIn35mm: null,
             gpsPosition: null,
             gpsSpeed: null,
+            gpsAccuracy: null,
             bearing: null,
             width: 0,
             height: 0,

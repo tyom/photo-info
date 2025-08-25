@@ -15,6 +15,14 @@ export type Position = [Latitude, Longitude, Altitude?];
 type ExifTagName = keyof ExifReader.Tags;
 type ExifTag = ExifReader.Tags[ExifTagName];
 
+export type GPSAccuracyGrade = 'A' | 'B' | 'C' | 'D' | 'F';
+
+export type GPSAccuracy = {
+  error: number; // Error in meters
+  grade: GPSAccuracyGrade;
+  description: string;
+};
+
 type PhotoInfo = {
   make: string | null;
   model: string | null;
@@ -22,6 +30,7 @@ type PhotoInfo = {
   focalLength: number | null;
   focalLengthIn35mm: number | null;
   gpsPosition: Position | null;
+  gpsAccuracy: GPSAccuracy | null;
   gpsSpeed: {
     value: number;
     unit: string;
@@ -55,6 +64,48 @@ const truncateSpeedUnit = (unit: string) => {
   };
   return units[unit] ?? unit;
 };
+
+/**
+ * Calculate GPS accuracy grade based on horizontal positioning error
+ * @param error - GPS horizontal positioning error in meters (null means excellent accuracy)
+ * @returns GPS accuracy grade and description
+ */
+function calculateGPSAccuracy(error: number | null): GPSAccuracy | null {
+  // No error field typically means excellent GPS accuracy
+  if (error === null) {
+    return {
+      error: 0,
+      grade: 'A',
+      description: 'Excellent - No positioning error reported',
+    };
+  }
+
+  let grade: GPSAccuracyGrade;
+  let description: string;
+
+  if (error < 5) {
+    grade = 'A';
+    description = 'Excellent - Strong satellite fix';
+  } else if (error < 10) {
+    grade = 'B';
+    description = 'Good - Typical smartphone accuracy';
+  } else if (error < 20) {
+    grade = 'C';
+    description = 'Fair - Some obstructions';
+  } else if (error < 50) {
+    grade = 'D';
+    description = 'Poor - Weak signal or just acquired';
+  } else {
+    grade = 'F';
+    description = 'Very poor - Unreliable GPS data';
+  }
+
+  return {
+    error: parseFloat(error.toFixed(2)),
+    grade,
+    description,
+  };
+}
 
 async function parseExifData(file: File) {
   let tags: ExifReader.Tags;
@@ -190,6 +241,13 @@ export async function getPhotoInfo(
     };
   }
 
+  // Get GPS accuracy information
+  const gpsHError = getExifValue('GPSHPositioningError', 'value', (value) =>
+    divideByNext(value as number[]),
+  );
+  // Only calculate accuracy if we have GPS position data
+  const gpsAccuracy = gpsPosition ? calculateGPSAccuracy(gpsHError) : null;
+
   let orientation: 'portrait' | 'landscape' | 'square' = 'landscape';
   if (finalWidth === finalHeight) {
     orientation = 'square';
@@ -215,6 +273,7 @@ export async function getPhotoInfo(
     focalLength: focalLength ? parseFloat(focalLength.toFixed(2)) : null,
     focalLengthIn35mm,
     gpsPosition,
+    gpsAccuracy,
     gpsSpeed,
     bearing,
     width: adjustedWidth,

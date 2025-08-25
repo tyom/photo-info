@@ -45,6 +45,11 @@ test('returns location data for 14mm lens', async () => {
     focalLength: 2.22,
     focalLengthIn35mm: 14,
     gpsPosition: [51.5042361, 0.0465306, 6.49],
+    gpsAccuracy: {
+      error: 0,
+      grade: 'A',
+      description: 'Excellent - No positioning error reported',
+    },
     gpsSpeed: { unit: 'km/h', value: 0 },
     bearing: 299.93,
     height: 3024,
@@ -66,6 +71,11 @@ test('returns location data for 24mm lens', async () => {
     focalLength: 6.86,
     focalLengthIn35mm: 24,
     gpsPosition: [51.5042361, 0.0465306, 6.49],
+    gpsAccuracy: {
+      error: 0,
+      grade: 'A',
+      description: 'Excellent - No positioning error reported',
+    },
     gpsSpeed: { unit: 'km/h', value: 0 },
     bearing: 299.93,
     height: 6048,
@@ -91,6 +101,11 @@ test('returns location data for 77mm lens', async () => {
     focalLength: 9,
     focalLengthIn35mm: 78,
     gpsPosition: [51.5042361, 0.0465306, 6.49],
+    gpsAccuracy: {
+      error: 0,
+      grade: 'A',
+      description: 'Excellent - No positioning error reported',
+    },
     gpsSpeed: { unit: 'km/h', value: 0 },
     bearing: 299.93,
     height: 3024,
@@ -116,6 +131,11 @@ test('returns correct orientation for portrait photo based on width and height',
     focalLength: 9,
     focalLengthIn35mm: 77,
     gpsPosition: [52.3586194, 4.9417333, 0.37],
+    gpsAccuracy: {
+      error: 0,
+      grade: 'A',
+      description: 'Excellent - No positioning error reported',
+    },
     gpsSpeed: { unit: 'km/h', value: 0.7296 },
     bearing: 306.03,
     height: 4032,
@@ -141,6 +161,7 @@ test('returns correct orientation for portrait photo based on orientation tag', 
     focalLength: 4,
     focalLengthIn35mm: 28,
     gpsPosition: null,
+    gpsAccuracy: null,
     gpsSpeed: null,
     bearing: null,
     height: 4032,
@@ -166,6 +187,11 @@ test('returns `frontCamera: true` for selfie', async () => {
     focalLength: 2.69,
     focalLengthIn35mm: 23,
     gpsPosition: [52.3712056, 4.8948222, 1.47],
+    gpsAccuracy: {
+      error: 0,
+      grade: 'A',
+      description: 'Excellent - No positioning error reported',
+    },
     gpsSpeed: { unit: 'km/h', value: 0.2204 },
     bearing: 340.77,
     height: 3024,
@@ -177,4 +203,131 @@ test('returns `frontCamera: true` for selfie', async () => {
     orientation: 'landscape',
     frontCamera: true,
   });
+});
+
+test('returns GPS accuracy grade A for excellent GPS (no error field)', async () => {
+  const mockExifNoError = {
+    ...mockExif24mm,
+    // No GPSHPositioningError field - indicates excellent accuracy
+  };
+
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifNoError);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsAccuracy).toEqual({
+    error: 0,
+    grade: 'A',
+    description: 'Excellent - No positioning error reported',
+  });
+});
+
+test('returns GPS accuracy grade A for error < 5 meters', async () => {
+  const mockExifLowError = {
+    ...mockExif24mm,
+    GPSHPositioningError: {
+      value: [4, 1], // 4 meters
+      description: '4',
+    },
+  };
+
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifLowError);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsAccuracy).toEqual({
+    error: 4,
+    grade: 'A',
+    description: 'Excellent - Strong satellite fix',
+  });
+});
+
+test('returns GPS accuracy grade B for error 5-10 meters', async () => {
+  const mockExifModerateError = {
+    ...mockExif24mm,
+    GPSHPositioningError: {
+      value: [75, 10], // 7.5 meters
+      description: '7.5',
+    },
+  };
+
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifModerateError);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsAccuracy).toEqual({
+    error: 7.5,
+    grade: 'B',
+    description: 'Good - Typical smartphone accuracy',
+  });
+});
+
+test('returns GPS accuracy grade C for error 10-20 meters', async () => {
+  const mockExifFairError = {
+    ...mockExif24mm,
+    GPSHPositioningError: {
+      value: [15, 1], // 15 meters
+      description: '15',
+    },
+  };
+
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifFairError);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsAccuracy).toEqual({
+    error: 15,
+    grade: 'C',
+    description: 'Fair - Some obstructions',
+  });
+});
+
+test('returns GPS accuracy grade D for error 20-50 meters', async () => {
+  const mockExifHighError = {
+    ...mockExif24mm,
+    GPSHPositioningError: {
+      value: [321713, 9315], // 34.54 meters (your example)
+      description: '34.54',
+    },
+  };
+
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifHighError);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsAccuracy).toEqual({
+    error: 34.54,
+    grade: 'D',
+    description: 'Poor - Weak signal or just acquired',
+  });
+});
+
+test('returns GPS accuracy grade F for error > 50 meters', async () => {
+  const mockExifVeryHighError = {
+    ...mockExif24mm,
+    GPSHPositioningError: {
+      value: [75, 1], // 75 meters
+      description: '75',
+    },
+  };
+
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifVeryHighError);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsAccuracy).toEqual({
+    error: 75,
+    grade: 'F',
+    description: 'Very poor - Unreliable GPS data',
+  });
+});
+
+test('returns null GPS accuracy when no GPS position available', async () => {
+  // Use mockExifRightTop which has no GPS data
+  // @ts-expect-error partial mock with JSON
+  vi.mocked(ExifReader.load).mockResolvedValueOnce(mockExifRightTop);
+
+  const result = await getPhotoInfo(fileMock);
+  expect(result.gpsPosition).toBeNull();
+  expect(result.gpsAccuracy).toBeNull();
 });

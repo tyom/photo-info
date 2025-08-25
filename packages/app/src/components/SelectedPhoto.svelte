@@ -131,6 +131,15 @@
             {gallery.selectedPhoto?.gpsSpeed.unit}
           </dd>
         {/if}
+        {#if gallery.selectedPhoto?.gpsAccuracy}
+          <dt>GPS Accuracy</dt>
+          <dd>
+            <span class="border p-1 rounded bg-foreground text-background"
+              >{gallery.selectedPhoto?.gpsAccuracy.grade}</span
+            >
+            {gallery.selectedPhoto?.gpsAccuracy.description}
+          </dd>
+        {/if}
       </dl>
     </div>
   </div>
