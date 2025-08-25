@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "exifreader": "^4.23.7"
+    "exifreader": "^4.31.1"
   },
   "devDependencies": {
     "tsup": "^8.3.0",
