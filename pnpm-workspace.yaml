@@ -2,4 +2,7 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
+  - esbuild
   - exifreader
+  - sharp
+  - workerd
