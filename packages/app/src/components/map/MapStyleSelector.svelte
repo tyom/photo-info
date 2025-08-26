@@ -7,19 +7,26 @@
 
   const mapStyle = getMapStyle();
 
-  // For some reason selected requires the value to be an object
-  // https://github.com/huntabyte/shadcn-svelte/issues/1132
-  const { id, name } = tileLayers.find((x) => x.id === mapStyle) ?? {};
-  let selected = $state({ value: id, label: name });
+  let value = $state<string>(mapStyle);
 </script>
 
 <div class={className}>
   <Select.Root
-    bind:selected
-    onSelectedChange={(e) => e && setMapStyle(e.value)}
+    type="single"
+    {value}
+    onValueChange={(v) => {
+      if (v) {
+        value = v;
+        setMapStyle(v as typeof mapStyle);
+      }
+    }}
   >
-    <Select.Trigger class="w-44 bg-muted text-foreground">
-      <Select.Value placeholder="Select map style" />
+    <Select.Trigger class="w-44 bg-popover/90! border-foreground/30">
+      {#if value}
+        {tileLayers.find((l) => l.id === value)?.name}
+      {:else}
+        <span class="text-muted-foreground">Select map style</span>
+      {/if}
     </Select.Trigger>
     <Select.Content class="-mt-[2px]">
       {#each tileLayers as layer}

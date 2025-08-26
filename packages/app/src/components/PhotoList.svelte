@@ -131,7 +131,7 @@
                 id={photo.id}
                 class="sr-only"
                 aria-label={photo.file.name}
-                on:click={() => handlePhotoClick(photo)}
+                onclick={() => handlePhotoClick(photo)}
               />
               <ImagePreview {photo} lockAspectRatio class="h-48" />
               <Button
