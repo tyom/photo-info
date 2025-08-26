@@ -111,7 +111,7 @@ export function extractFocalLength(
   ) => V | null,
 ): number | null {
   const focalLength = getExifValue('FocalLength', 'value', (value) =>
-    divideByNext(value as number[]),
+    Array.isArray(value) ? divideByNext(value as number[]) : null,
   );
   return focalLength ? parseFloat(focalLength.toFixed(2)) : null;
 }
@@ -140,7 +140,7 @@ export function extractFNumber(
   ) => V | null,
 ): string | null {
   const fNumber = getExifValue('FNumber', 'value', (value) =>
-    divideByNext(value as number[]),
+    Array.isArray(value) ? divideByNext(value as number[]) : null,
   );
   return fNumber ? `f/${fNumber}` : null;
 }

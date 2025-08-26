@@ -80,7 +80,7 @@ export function extractGPSPosition(
       ? getExifValue('GPSLatitude', 'description', (lat) => +lat * latRef)
       : null;
     const altitude = getExifValue('GPSAltitude', 'value', (value) =>
-      divideByNext(value as number[]),
+      Array.isArray(value) ? divideByNext(value as number[]) : null,
     );
 
     if (typeof longitude !== 'number' || typeof latitude !== 'number') {

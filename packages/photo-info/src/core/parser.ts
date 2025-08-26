@@ -1,4 +1,4 @@
-import * as ExifReader from 'exifreader';
+import ExifReader from 'exifreader';
 import type { ExifTagName, ExifTag } from './types.ts';
 
 export async function parseExifData(file: File) {
