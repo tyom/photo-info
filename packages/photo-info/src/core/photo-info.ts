@@ -73,7 +73,7 @@ export async function getPhotoInfo(
     angleOfView = parseFloat(angleOfView.toFixed(4));
   }
 
-  let angleOfViewForMap: number | null = null;
+  let effectiveAngleOfView: number | null = null;
 
   // If FieldOfView is not in EXIF, calculate it
   if (!angleOfView && focalLength) {
@@ -93,7 +93,7 @@ export async function getPhotoInfo(
       // Using 3:2 aspect ratio for 35mm (36x24mm)
       const verticalFov35mm =
         2 * Math.atan(24 / (2 * focalLengthIn35mm)) * (180 / Math.PI);
-      angleOfViewForMap =
+      effectiveAngleOfView =
         orientation === 'portrait'
           ? parseFloat(verticalFov35mm.toFixed(4))
           : angleOfView;
@@ -108,7 +108,7 @@ export async function getPhotoInfo(
       angleOfView = fovs.horizontal;
 
       // For portrait orientation, use vertical FOV for the map marker
-      angleOfViewForMap =
+      effectiveAngleOfView =
         orientation === 'portrait' ? fovs.vertical : fovs.horizontal;
     }
   } else if (angleOfView) {
@@ -121,11 +121,11 @@ export async function getPhotoInfo(
       const horizontalRad = angleOfView * (Math.PI / 180);
       const verticalRad =
         2 * Math.atan(Math.tan(horizontalRad / 2) / aspectRatioValue);
-      angleOfViewForMap = parseFloat(
+      effectiveAngleOfView = parseFloat(
         (verticalRad * (180 / Math.PI)).toFixed(4),
       );
     } else {
-      angleOfViewForMap = angleOfView;
+      effectiveAngleOfView = angleOfView;
     }
   }
 
@@ -140,7 +140,7 @@ export async function getPhotoInfo(
     make,
     model,
     angleOfView,
-    angleOfViewForMap,
+    effectiveAngleOfView,
     focalLength,
     focalLengthIn35mm,
     gpsPosition,

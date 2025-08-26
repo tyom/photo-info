@@ -9,7 +9,7 @@ export type PhotoInfo = {
   make: string | null;
   model: string | null;
   angleOfView: number | null;
-  angleOfViewForMap: number | null; // Effective FOV for map display (considers orientation)
+  effectiveAngleOfView: number | null; // Effective FOV for map display (considers orientation)
   focalLength: number | null;
   focalLengthIn35mm: number | null;
   gpsPosition: Position | null;

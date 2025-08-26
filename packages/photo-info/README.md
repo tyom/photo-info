@@ -30,7 +30,7 @@ console.log(photoInfo);
 //   make: 'Apple',
 //   model: 'iPhone 15 Pro',
 //   angleOfView: 23.5,
-//   angleOfViewForMap: 23.5,
+//   effectiveAngleOfView: 23.5,
 //   bearing: 45.2,
 //   gpsPosition: [51.5074, -0.1276, 10.5],
 //   gpsAccuracy: {
@@ -74,28 +74,28 @@ Extracts photo information from an image file containing EXIF data.
 
 A `PhotoInfo` object with the following properties:
 
-| Property            | Type                                    | Description                                                         |
-| ------------------- | --------------------------------------- | ------------------------------------------------------------------- |
-| `make`              | `string \| null`                        | Camera manufacturer (e.g., "Canon", "Apple")                        |
-| `model`             | `string \| null`                        | Camera model (e.g., "iPhone 15 Pro")                                |
-| `angleOfView`       | `number \| null`                        | Horizontal angle of view in degrees                                 |
-| `angleOfViewForMap` | `number \| null`                        | Effective FOV for map display (considers orientation)               |
-| `bearing`           | `number \| null`                        | Compass direction the camera was facing (0-360°)                    |
-| `gpsPosition`       | `[lat, lng, alt?] \| null`              | GPS coordinates: latitude, longitude, altitude (meters)             |
-| `gpsAccuracy`       | `{error, grade, description} \| null`   | GPS accuracy with error (meters), grade (A-F), and text description |
-| `gpsSpeed`          | `{value, unit} \| null`                 | Speed at capture time with unit (typically "km/h")                  |
-| `focalLength`       | `number \| null`                        | Actual focal length in millimeters                                  |
-| `focalLengthIn35mm` | `number \| null`                        | 35mm equivalent focal length                                        |
-| `width`             | `number`                                | Image width in pixels                                               |
-| `height`            | `number`                                | Image height in pixels                                              |
-| `orientation`       | `'portrait' \| 'landscape' \| 'square'` | Image orientation                                                   |
-| `frontCamera`       | `boolean`                               | Whether taken with front-facing camera                              |
-| `dateTime`          | `string \| null`                        | ISO 8601 formatted capture time                                     |
-| `exposureTime`      | `string \| null`                        | Shutter speed (e.g., "1/120")                                       |
-| `exposureProgram`   | `string \| null`                        | Camera exposure mode                                                |
-| `fNumber`           | `string \| null`                        | Aperture value (e.g., "f/1.8")                                      |
-| `lens`              | `string \| null`                        | Lens model/description                                              |
-| `originalTags`      | `object \| undefined`                   | Raw EXIF data (when requested)                                      |
+| Property               | Type                                    | Description                                                         |
+| ---------------------- | --------------------------------------- | ------------------------------------------------------------------- |
+| `make`                 | `string \| null`                        | Camera manufacturer (e.g., "Canon", "Apple")                        |
+| `model`                | `string \| null`                        | Camera model (e.g., "iPhone 15 Pro")                                |
+| `angleOfView`          | `number \| null`                        | Horizontal angle of view in degrees                                 |
+| `effectiveAngleOfView` | `number \| null`                        | Effective FOV for map display (considers orientation)               |
+| `bearing`              | `number \| null`                        | Compass direction the camera was facing (0-360°)                    |
+| `gpsPosition`          | `[lat, lng, alt?] \| null`              | GPS coordinates: latitude, longitude, altitude (meters)             |
+| `gpsAccuracy`          | `{error, grade, description} \| null`   | GPS accuracy with error (meters), grade (A-F), and text description |
+| `gpsSpeed`             | `{value, unit} \| null`                 | Speed at capture time with unit (typically "km/h")                  |
+| `focalLength`          | `number \| null`                        | Actual focal length in millimeters                                  |
+| `focalLengthIn35mm`    | `number \| null`                        | 35mm equivalent focal length                                        |
+| `width`                | `number`                                | Image width in pixels                                               |
+| `height`               | `number`                                | Image height in pixels                                              |
+| `orientation`          | `'portrait' \| 'landscape' \| 'square'` | Image orientation                                                   |
+| `frontCamera`          | `boolean`                               | Whether taken with front-facing camera                              |
+| `dateTime`             | `string \| null`                        | ISO 8601 formatted capture time                                     |
+| `exposureTime`         | `string \| null`                        | Shutter speed (e.g., "1/120")                                       |
+| `exposureProgram`      | `string \| null`                        | Camera exposure mode                                                |
+| `fNumber`              | `string \| null`                        | Aperture value (e.g., "f/1.8")                                      |
+| `lens`                 | `string \| null`                        | Lens model/description                                              |
+| `originalTags`         | `object \| undefined`                   | Raw EXIF data (when requested)                                      |
 
 ### `getMappedPhotoInfo(file: File): Promise<MappedExifData>`
 
@@ -269,10 +269,10 @@ geotaggedPhotos.forEach(({ info }) => {
     `);
   }
 
-  if (info.angleOfViewForMap && info.bearing) {
-    // Use angleOfViewForMap for correct orientation handling
+  if (info.effectiveAngleOfView && info.bearing) {
+    // Use effectiveAngleOfView for correct orientation handling
     const svg = createFovMarkerSvg({
-      angleOfView: info.angleOfViewForMap,
+      angleOfView: info.effectiveAngleOfView,
       bearing: info.bearing,
     });
     // Add SVG overlay to map

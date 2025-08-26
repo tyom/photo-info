@@ -197,9 +197,9 @@
               <dt class="text-muted-foreground">Angle of view</dt>
               <dd class="font-medium">
                 {gallery.selectedPhoto
-                  ?.angleOfView}°{#if gallery.selectedPhoto?.orientation === 'portrait' && gallery.selectedPhoto?.angleOfViewForMap}
+                  ?.angleOfView}°{#if gallery.selectedPhoto?.orientation === 'portrait' && gallery.selectedPhoto?.effectiveAngleOfView}
                   <span class="text-muted-foreground text-sm">
-                    ({gallery.selectedPhoto?.angleOfViewForMap}° in portrait)
+                    ({gallery.selectedPhoto?.effectiveAngleOfView}° in portrait)
                   </span>
                 {/if}
               </dd>
