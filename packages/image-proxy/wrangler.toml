@@ -1,0 +1,43 @@
+name = "photo-info-image-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "development"
+
+# Cloudflare's experimental native rate limiting (not currently used)
+# We use our custom KV-based implementation instead because it supports:
+# - Per-user limits (20/min) in addition to global limits (120/min)
+# - More control and flexibility over rate limiting logic
+# [[unsafe.bindings]]
+# name = "RATE_LIMITER"
+# type = "ratelimit"
+# namespace_id = "1"
+# simple = { limit = 120, period = 60 }
+
+# KV namespace for tracking per-user rate limits
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "9ac4354408294c108f63a17431bf5e50"
+preview_id = "fda78bfed88548e88bd255a28147d2c4"
+
+# Durable Objects for more complex rate limiting if needed
+# [[durable_objects.bindings]]
+# name = "RATE_LIMITER"
+# class_name = "RateLimiter"
+
+# Development settings
+[dev]
+port = 3001
+local_protocol = "http"
+
+# Environment-specific settings
+[env.production]
+name = "photo-info-image-proxy-production"
+vars = { ENVIRONMENT = "production" }
+
+# Production KV namespace (using the same as main for now)
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "9ac4354408294c108f63a17431bf5e50"

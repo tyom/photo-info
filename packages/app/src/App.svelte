@@ -2,7 +2,9 @@
   import { type MapOptions } from 'leaflet';
   import { ModeWatcher } from 'mode-watcher';
   import { Map, PhotoMarker, MapStyleSelector } from '$components/map';
-  import { PhotoList, SelectedPhoto } from '$components';
+  import { PhotoList } from '$components';
+  import MapDropzone from '$components/MapDropzone.svelte';
+  import PhotoDetailsOverlay from '$components/PhotoDetailsOverlay.svelte';
   import { gallery } from '$runes';
   import './app.css';
 
@@ -13,13 +15,14 @@
 </script>
 
 <main>
+  <MapDropzone />
   <Map options={mapOptions}>
     {#each gallery.geoLocatedPhotos as { gpsPosition, ...photo }}
       <PhotoMarker position={gpsPosition} {...photo} />
     {/each}
   </Map>
   <PhotoList />
-  <SelectedPhoto />
+  <PhotoDetailsOverlay />
   <MapStyleSelector class="absolute z-10 top-3 left-14" />
   <ModeWatcher />
 </main>

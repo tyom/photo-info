@@ -4,8 +4,29 @@ import { tileLayers } from '$map-styles';
 type MapStyle = (typeof tileLayers)[number]['id'];
 
 const LOCAL_STORAGE_KEY = 'photo-info:mapStyle';
-const defaultMapStyle =
-  (localStorage.getItem(LOCAL_STORAGE_KEY) as MapStyle) ?? tileLayers[0].id;
+
+// Safe localStorage access with error handling
+function getLocalStorageItem(key: string, defaultValue: string): string {
+  try {
+    return localStorage.getItem(key) ?? defaultValue;
+  } catch (error) {
+    console.warn('Failed to access localStorage:', error);
+    return defaultValue;
+  }
+}
+
+function setLocalStorageItem(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.warn('Failed to write to localStorage:', error);
+  }
+}
+
+const defaultMapStyle = getLocalStorageItem(
+  LOCAL_STORAGE_KEY,
+  tileLayers[0].id,
+) as MapStyle;
 
 let map = $state<L.Map | null>(null);
 let mapStyle = $state<MapStyle>(defaultMapStyle);
@@ -34,18 +55,25 @@ export function createMap(container: HTMLDivElement, options?: L.MapOptions) {
   return m;
 }
 
-export function addMarker(marker: L.Marker) {
-  if (!map) {
-    throw new Error('Map not initialized');
-  }
+export function addMarker(marker: L.Marker): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!map) {
+      reject(new Error('Map not initialized'));
+      return;
+    }
 
-  const latLngKey = marker.getLatLng().toString();
-  const isExistingMarker = markers.has(latLngKey);
+    const latLngKey = marker.getLatLng().toString();
+    const isExistingMarker = markers.has(latLngKey);
 
-  if (!isExistingMarker) {
-    markers.set(latLngKey, marker);
-    marker.addTo(map);
-  }
+    if (!isExistingMarker) {
+      markers.set(latLngKey, marker);
+      marker.addTo(map);
+      // Resolve once the marker is added
+      resolve();
+    } else {
+      resolve();
+    }
+  });
 }
 
 export function removeMarker(marker: L.Marker) {
@@ -54,12 +82,20 @@ export function removeMarker(marker: L.Marker) {
   marker.remove();
 }
 
-export function fitToAllMarkers(options: FlyToOptions) {
-  if (markers.size === 0) {
-    return;
-  }
-  const markerGroup = L.featureGroup(Array.from(markers.values()));
-  map?.flyToBounds(markerGroup.getBounds(), options);
+export function fitToAllMarkers(options: FlyToOptions): Promise<void> {
+  return new Promise((resolve) => {
+    if (markers.size === 0) {
+      resolve();
+      return;
+    }
+    const markerGroup = L.featureGroup(Array.from(markers.values()));
+    map?.flyToBounds(markerGroup.getBounds(), options);
+
+    // Wait for the animation to start
+    requestAnimationFrame(() => {
+      resolve();
+    });
+  });
 }
 
 export function fitToMarkerByPosition(
@@ -69,8 +105,10 @@ export function fitToMarkerByPosition(
   const markerKey = L.latLng(position).toString();
   const marker = markers.get(markerKey);
   if (!marker) {
-    console.warn(`No active markers found for ${markerKey}`);
-    console.log(markers.keys());
+    if (import.meta.env.MODE === 'development') {
+      console.warn(`No active markers found for ${markerKey}`);
+      console.log(markers.keys());
+    }
     return;
   }
   const markerGroup = L.featureGroup([marker]);
@@ -81,7 +119,7 @@ export function setMapStyle(layerId: typeof mapStyle = mapStyle) {
   if (!map) return;
 
   mapStyle = layerId;
-  localStorage.setItem(LOCAL_STORAGE_KEY, layerId);
+  setLocalStorageItem(LOCAL_STORAGE_KEY, layerId);
 
   const layer = tileLayers.find((x) => x.id === layerId);
 

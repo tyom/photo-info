@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Dropzone from 'svelte-file-dropzone';
   import {
     gallery,
     removeMarker,
@@ -10,40 +9,25 @@
   import IconClose from 'virtual:icons/ic/baseline-close';
   import IconRemove from 'virtual:icons/ic/baseline-remove-circle';
   import IconPhotoGallery from 'virtual:icons/ic/baseline-photo-library';
-  import { cn } from '$lib/utils';
   import { getMarkerByPhoto } from '$lib/map';
   import { Button } from './ui/button';
   import { Label } from './ui/label';
   import * as RadioGroup from './ui/radio-group';
   import ImagePreview from './ImagePreview.svelte';
 
-  let formWidth = $state(0);
-  let hasAddedFiles = $state(false);
-  let isDraggingOver = $state(false);
+  // Constants for UI configuration
+  const MAP_EDGE_PADDING = 50;
+  const SIDEBAR_WIDTH = 320;
 
-  const edgePadding = 50;
   const getPadding = () => ({
-    paddingTopLeft: [edgePadding, edgePadding],
+    paddingTopLeft: [MAP_EDGE_PADDING, MAP_EDGE_PADDING] as [number, number],
     paddingBottomRight: [
-      gallery.sidebarOpen ? formWidth + edgePadding : edgePadding,
-      edgePadding,
-    ],
+      gallery.sidebarOpen ? SIDEBAR_WIDTH + MAP_EDGE_PADDING : MAP_EDGE_PADDING,
+      MAP_EDGE_PADDING,
+    ] as [number, number],
   });
 
   const fitMarkers = () => fitToAllMarkers(getPadding());
-
-  async function handleFileDrop(e: CustomEvent<{ acceptedFiles: File[] }>) {
-    const { acceptedFiles } = e.detail;
-    await gallery.addPhotos(acceptedFiles);
-
-    isDraggingOver = false;
-
-    // TODO: find a better way to ensure all markers are added
-    setTimeout(() => {
-      hasAddedFiles = true;
-      fitMarkers();
-    }, 500);
-  }
 
   function handlePhotoClick(photo: Photo) {
     if (!photo.gpsPosition) return;
@@ -65,6 +49,26 @@
     }
   }
 
+  function handleAddPhotoClick() {
+    // Create a hidden file input
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*';
+
+    input.onchange = async () => {
+      const files = Array.from(input.files || []);
+      if (files.length > 0) {
+        await gallery.addPhotos(files);
+
+        // Fit map to show all markers after adding photos
+        await fitToAllMarkers(getPadding());
+      }
+    };
+
+    input.click();
+  }
+
   $effect(() => {
     if (!gallery.selectedPhoto?.gpsPosition) {
       fitMarkers();
@@ -75,21 +79,20 @@
 {#if !gallery.sidebarOpen}
   <div class="absolute z-10 right-0 top-0 m-4">
     <Button
-      onclick={gallery.toggleSidebar}
+      onclick={() => gallery.toggleSidebar(true)}
       class="flex gap-2 bg-muted hover:bg-background text-foreground"
     >
-      <IconPhotoGallery /> Add Photos</Button
+      <IconPhotoGallery /> Photos</Button
     >
   </div>
 {/if}
 
 {#if gallery.sidebarOpen}
-  <form
-    bind:clientWidth={formWidth}
-    class="absolute z-10 inset-0 left-auto w-1/5 min-w-20 max-w-72 bg-gray-800/80 backdrop-blur flex flex-col"
+  <aside
+    class="absolute z-10 inset-y-0 right-0 w-80 bg-background/95 backdrop-blur-sm border-l border-border flex flex-col shadow-xl"
   >
-    <header class="p-4 pb-2">
-      <div class="flex justify-between items-center">
+    <header class="p-4 border-b border-border flex-shrink-0">
+      <div class="flex justify-between items-center mb-2">
         <h2 class="text-xl font-bold">Photos</h2>
         <Button
           variant="ghost"
@@ -99,49 +102,68 @@
           <IconClose />
         </Button>
       </div>
-      <p class="text-xs">
-        The photos stay in your browser.<br />They are not uploaded anywhere.
-      </p>
+      {#if gallery.photos.length > 0}
+        <p class="text-sm text-muted-foreground">
+          {gallery.photos.length} photo{gallery.photos.length !== 1 ? 's' : ''} •
+          {gallery.geoLocatedPhotos.length} geolocated
+        </p>
+      {:else}
+        <p class="text-sm text-muted-foreground">
+          The photos stay in your browser.<br />They are not uploaded anywhere.
+        </p>
+      {/if}
     </header>
+
     {#if gallery.photos.length > 0}
-      <RadioGroup.Root
-        value={gallery.selectedPhoto?.id ?? ''}
-        class="flex flex-col flex-2 px-4 py-2 overflow-auto mb-30 border-white/50 border-t border-b"
-        onValueChange={gallery.selectPhoto}
-      >
-        {#each gallery.photos as photo}
-          <Label
-            for={photo.file.name}
-            class="group relative border-muted hover:border-white/30 [&:has([data-state=checked])]:border-primary flex flex-col items-center justify-between border-2 bg-transparent shadow cursor-pointer"
-          >
-            <RadioGroup.Item
-              value={photo.file.name}
-              id={photo.file.name}
-              class="sr-only"
-              aria-label="Card"
-              on:click={() => handlePhotoClick(photo)}
-            />
-            <ImagePreview {photo} lockAspectRatio />
-            <Button
-              variant="ghost"
-              size="icon"
-              class="opacity-0 group-hover:opacity-100 absolute right-1 top-1 bg-black/30 h-8 w-8 rounded-full hover:text-red-300 transition-opacity duration-200"
-              onclick={() => handleRemovePhoto(photo)}
+      <div class="flex-1 overflow-y-auto p-4">
+        <RadioGroup.Root
+          value={gallery.selectedPhoto?.id ?? ''}
+          class="flex flex-col gap-2"
+          onValueChange={gallery.selectPhoto}
+        >
+          {#each gallery.photos as photo}
+            <Label
+              for={photo.id}
+              class="group relative border-2 border-border hover:border-primary/50 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 rounded-lg overflow-hidden cursor-pointer transition-all"
             >
-              <IconRemove class="text-lg" />
-            </Button>
-          </Label>
-        {/each}
-      </RadioGroup.Root>
+              <RadioGroup.Item
+                value={photo.id}
+                id={photo.id}
+                class="sr-only"
+                aria-label={photo.file.name}
+                on:click={() => handlePhotoClick(photo)}
+              />
+              <ImagePreview {photo} lockAspectRatio class="h-48" />
+              <Button
+                variant="destructive"
+                size="icon"
+                class="opacity-0 group-hover:opacity-100 absolute right-2 top-2 h-8 w-8 transition-opacity duration-200"
+                onclick={(e: MouseEvent) => {
+                  e.stopPropagation();
+                  handleRemovePhoto(photo);
+                }}
+              >
+                <IconRemove class="text-lg" />
+              </Button>
+            </Label>
+          {/each}
+        </RadioGroup.Root>
+      </div>
+    {:else}
+      <div class="flex-1 flex items-center justify-center p-8">
+        <div class="text-center">
+          <IconPhotoGallery
+            class="w-16 h-16 mx-auto mb-4 text-muted-foreground"
+          />
+          <p class="text-muted-foreground mb-2">No photos yet</p>
+          <p class="text-sm text-muted-foreground">
+            Drag and drop photos onto the map
+          </p>
+        </div>
+      </div>
     {/if}
-    <Dropzone
-      on:drop={handleFileDrop}
-      on:dragover={() => (isDraggingOver = true)}
-      on:dragleave={(isDraggingOver = false)}
-      containerClasses={cn(
-        'flex-1 m-2 !bg-transparent flex text-center justify-center !border-white/50 !rounded-lg hover:!border-white/75',
-        isDraggingOver && '!bg-white/10 !border-white',
-      )}
-    />
-  </form>
+    <footer class="p-4 border-t border-border flex-shrink-0">
+      <Button variant="outline" onclick={handleAddPhotoClick}>Add Photo</Button>
+    </footer>
+  </aside>
 {/if}

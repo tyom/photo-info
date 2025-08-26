@@ -14,7 +14,10 @@
 </script>
 
 <div class={className}>
-  <Select.Root bind:selected onSelectedChange={(e) => setMapStyle(e.value)}>
+  <Select.Root
+    bind:selected
+    onSelectedChange={(e) => e && setMapStyle(e.value)}
+  >
     <Select.Trigger class="w-44 bg-muted text-foreground">
       <Select.Value placeholder="Select map style" />
     </Select.Trigger>

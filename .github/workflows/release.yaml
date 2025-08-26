@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+      - alpha
+      - beta
+      - rc
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Enter pre-release mode if not on main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          # Determine pre-release tag from branch name
+          if [[ "${{ github.ref }}" == "refs/heads/alpha" ]]; then
+            npx changeset pre enter alpha
+          elif [[ "${{ github.ref }}" == "refs/heads/beta" ]]; then
+            npx changeset pre enter beta
+          elif [[ "${{ github.ref }}" == "refs/heads/rc" ]]; then
+            npx changeset pre enter rc
+          fi
+
+      - name: Create Release Pull Request or Publish (main only)
+        if: github.ref == 'refs/heads/main'
+        uses: changesets/action@v1
+        with:
+          publish: pnpm changeset publish
+          title: 'chore: version packages'
+          commit: 'chore: version packages'
+          createGithubReleases: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Pre-release (non-main branches)
+        if: github.ref != 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Version packages (pre-release mode already set in previous step)
+          npx changeset version
+
+          # Commit version changes
+          git add -A
+          git commit -m "chore: version packages (pre-release)" || echo "No changes to commit"
+
+          # Build packages again after versioning
+          pnpm build
+
+          # Configure npm authentication
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+          # Publish to npm
+          npx changeset publish
+
+          # Push version changes back to branch
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

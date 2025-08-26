@@ -1,18 +1,16 @@
 import eslint from '@eslint/js';
 import importPlugin from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
+import gitignore from 'eslint-config-flat-gitignore';
 import vitest from 'eslint-plugin-vitest';
 import globals from 'globals';
 
 export default tseslint.config(
-  {
-    ignores: ['**/dist', 'pnpm-lock.yaml'],
-  },
+  gitignore(),
   eslint.configs.recommended,
   importPlugin.flatConfigs.typescript,
   ...tseslint.configs.recommended,
   {
-    plugins: { import: importPlugin },
     languageOptions: {
       globals: {
         ...globals.browser,

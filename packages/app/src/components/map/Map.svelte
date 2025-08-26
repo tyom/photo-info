@@ -5,7 +5,6 @@
   import { getMarkerByPhoto, setSvgMarkerState } from '$lib/map';
 
   type $$Props = {
-    layer: { urlTemplate: string; layerOptions: L.TileLayerOptions };
     children?: Snippet;
     options?: L.MapOptions;
   };
