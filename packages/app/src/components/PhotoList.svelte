@@ -49,6 +49,26 @@
     }
   }
 
+  function handleAddPhotoClick() {
+    // Create a hidden file input
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*';
+
+    input.onchange = async () => {
+      const files = Array.from(input.files || []);
+      if (files.length > 0) {
+        await gallery.addPhotos(files);
+
+        // Fit map to show all markers after adding photos
+        await fitToAllMarkers(getPadding());
+      }
+    };
+
+    input.click();
+  }
+
   $effect(() => {
     if (!gallery.selectedPhoto?.gpsPosition) {
       fitMarkers();
@@ -62,7 +82,7 @@
       onclick={() => gallery.toggleSidebar(true)}
       class="flex gap-2 bg-muted hover:bg-background text-foreground"
     >
-      <IconPhotoGallery /> Add Photos</Button
+      <IconPhotoGallery /> Photos</Button
     >
   </div>
 {/if}
@@ -142,5 +162,8 @@
         </div>
       </div>
     {/if}
+    <footer class="p-4 border-t border-border flex-shrink-0">
+      <Button variant="outline" onclick={handleAddPhotoClick}>Add Photo</Button>
+    </footer>
   </aside>
 {/if}
