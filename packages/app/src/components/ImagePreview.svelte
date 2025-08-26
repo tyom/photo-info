@@ -157,7 +157,11 @@
 </script>
 
 <figure
-  class={cn('relative w-full bg-black/20', className)}
+  class={cn(
+    'relative w-full bg-black/20',
+    !lockAspectRatio && 'h-full',
+    className,
+  )}
   style={getFigureStyle()}
 >
   {#if thumbnailError}
@@ -182,14 +186,14 @@
       alt=""
       width="auto"
       height="auto"
-      class="image-preview"
+      class="image-preview w-full h-full object-cover"
       onload={handleLoad}
     />
   {/if}
   <figcaption
     class="flex gap-2 items-center absolute inset-0 top-auto z-2 bg-black/50 p-2 text-xs"
   >
-    <span class="icons">
+    <span class="icons flex-shrink-0">
       {#if photo.gpsPosition}
         <span title="Geolocated photo">
           <IconGpsOn class="text-green-500" />
@@ -200,7 +204,9 @@
         </span>
       {/if}
     </span>
-    <span class="text-center">{photo.file.name}</span>
+    <span class="truncate min-w-0" title={photo.file.name}
+      >{photo.file.name}</span
+    >
   </figcaption>
 </figure>
 
