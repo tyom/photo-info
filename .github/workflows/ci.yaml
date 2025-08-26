@@ -6,7 +6,6 @@ on:
 
 env:
   FORCE_COLOR: 3
-  VITE_PROXY_URL: https://photo-info-image-proxy.tyom.workers.dev
 
 jobs:
   test:
