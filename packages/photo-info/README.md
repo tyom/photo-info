@@ -1,7 +1,7 @@
 # Photo Info
 
 [![npm version](https://img.shields.io/npm/v/photo-info.svg?style=flat-square)](https://www.npmjs.com/package/photo-info)
-[![Build](https://github.com/tyom/photo-info/actions/workflows/build.yaml/badge.svg)](https://github.com/tyom/photo-info/actions/workflows/build.yaml)
+[![CI](https://github.com/tyom/photo-info/actions/workflows/ci.yaml/badge.svg)](https://github.com/tyom/photo-info/actions/workflows/ci.yaml)
 
 This package provides a function to extract useful information from photos, such as geo location, camera make and model,
 focal length and angle of view, which could be useful to orient the photo on the map.
