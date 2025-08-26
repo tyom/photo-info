@@ -120,6 +120,7 @@ export function createPhotoGallery() {
             make: null,
             model: null,
             angleOfView: null,
+            angleOfViewForMap: null,
             focalLength: null,
             focalLengthIn35mm: null,
             gpsPosition: null,

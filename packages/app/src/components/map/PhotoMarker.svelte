@@ -7,15 +7,27 @@
   type $Props = {
     position: Position;
     angleOfView?: number | null;
+    angleOfViewForMap?: number | null;
     bearing?: number | null;
     size?: number;
     circleOutlineColor?: string;
   };
 
-  const { position, angleOfView, bearing, size = 300 }: $Props = $props();
+  const {
+    position,
+    angleOfView,
+    angleOfViewForMap,
+    bearing,
+    size = 300,
+  }: $Props = $props();
 
   let marker: L.Marker;
-  let icon = createIcon({ angleOfView, bearing, size });
+  // Use angleOfViewForMap if available (considers orientation), otherwise fall back to angleOfView
+  let icon = createIcon({
+    angleOfView: angleOfViewForMap ?? angleOfView,
+    bearing,
+    size,
+  });
 
   $effect(() => {
     const map = getMap();

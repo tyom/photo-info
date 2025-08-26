@@ -1,5 +1,10 @@
 import * as ExifReader from 'exifreader';
-import { calculateAngleOfView, divideByNext, reformatDate } from './utils.ts';
+import {
+  calculateAnglesOfView,
+  divideByNext,
+  reformatDate,
+  inferSensorAspectRatio,
+} from './utils.ts';
 import {
   groupByCategory,
   getDisplayName,
@@ -27,6 +32,7 @@ type PhotoInfo = {
   make: string | null;
   model: string | null;
   angleOfView: number | null;
+  angleOfViewForMap: number | null; // Effective FOV for map display (considers orientation)
   focalLength: number | null;
   focalLengthIn35mm: number | null;
   gpsPosition: Position | null;
@@ -264,12 +270,84 @@ export async function getPhotoInfo(
     adjustedHeight = finalWidth;
   }
 
+  // Determine sensor aspect ratio from image dimensions if available
+  let aspectRatio: string | undefined;
+  if (finalWidth && finalHeight) {
+    aspectRatio = inferSensorAspectRatio(finalWidth, finalHeight);
+  }
+
+  // Try to get FieldOfView from EXIF first (some cameras/phones provide this)
+  // If not available, calculate it
+  let angleOfView: number | null = getExifValue('FieldOfView', 'value') as
+    | number
+    | null;
+
+  // Round the EXIF FieldOfView value if present
+  if (angleOfView) {
+    angleOfView = parseFloat(angleOfView.toFixed(4));
+  }
+
+  let angleOfViewForMap: number | null = null;
+
+  // If FieldOfView is not in EXIF, calculate it
+  if (!angleOfView && focalLength) {
+    // For iPhones and some cameras, when there's a significant crop factor (> 5),
+    // the FOV is often calculated from the 35mm equivalent
+    const cropFactor = focalLengthIn35mm ? focalLengthIn35mm / focalLength : 1;
+
+    // For phones with high crop factors, use 35mm equivalent FOV calculation
+    // For DSLRs and mirrorless (crop factor < 5), use sensor-based calculation
+    if (cropFactor > 5 && focalLengthIn35mm) {
+      // Phone sensors: calculate FOV from 35mm equivalent
+      angleOfView =
+        2 * Math.atan(36 / (2 * focalLengthIn35mm)) * (180 / Math.PI);
+      angleOfView = parseFloat(angleOfView.toFixed(4));
+
+      // For phones, also calculate vertical FOV for portrait orientation
+      // Using 3:2 aspect ratio for 35mm (36x24mm)
+      const verticalFov35mm =
+        2 * Math.atan(24 / (2 * focalLengthIn35mm)) * (180 / Math.PI);
+      angleOfViewForMap =
+        orientation === 'portrait'
+          ? parseFloat(verticalFov35mm.toFixed(4))
+          : angleOfView;
+    } else {
+      // DSLR/Mirrorless: use sensor dimension-based calculation
+      // Calculate both horizontal and vertical FOV
+      const fovs = calculateAnglesOfView(
+        focalLength,
+        focalLengthIn35mm,
+        aspectRatio,
+      );
+      angleOfView = fovs.horizontal;
+
+      // For portrait orientation, use vertical FOV for the map marker
+      angleOfViewForMap =
+        orientation === 'portrait' ? fovs.vertical : fovs.horizontal;
+    }
+  } else if (angleOfView) {
+    // If we have angleOfView from EXIF, estimate the vertical FOV for portrait
+    // Most cameras report horizontal FOV, so we need to calculate vertical
+    if (orientation === 'portrait' && aspectRatio) {
+      const [w, h] = aspectRatio.split(':').map(Number);
+      const aspectRatioValue = w / h;
+      // Approximate vertical FOV from horizontal FOV and aspect ratio
+      const horizontalRad = angleOfView * (Math.PI / 180);
+      const verticalRad =
+        2 * Math.atan(Math.tan(horizontalRad / 2) / aspectRatioValue);
+      angleOfViewForMap = parseFloat(
+        (verticalRad * (180 / Math.PI)).toFixed(4),
+      );
+    } else {
+      angleOfViewForMap = angleOfView;
+    }
+  }
+
   const result: PhotoInfo = {
     make: getExifValue('Make', 'description'),
     model: getExifValue('Model', 'description'),
-    angleOfView: focalLength
-      ? calculateAngleOfView(focalLength, focalLengthIn35mm)
-      : null,
+    angleOfView,
+    angleOfViewForMap,
     focalLength: focalLength ? parseFloat(focalLength.toFixed(2)) : null,
     focalLengthIn35mm,
     gpsPosition,

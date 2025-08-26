@@ -68,25 +68,105 @@ export function calculate35mmEquivalentFocalLength(
 }
 
 /**
+ * Determine the sensor aspect ratio based on image dimensions.
+ * Common sensor aspect ratios:
+ * - 3:2 for DSLRs (Canon, Nikon full frame and APS-C)
+ * - 4:3 for Micro Four Thirds and many phones
+ * - 16:9 for video/cinema
+ * @param width - Image width in pixels
+ * @param height - Image height in pixels
+ * @returns Aspect ratio string like "3:2" or "4:3"
+ */
+export function inferSensorAspectRatio(width: number, height: number): string {
+  // Calculate the aspect ratio
+  const ratio = Math.max(width, height) / Math.min(width, height);
+
+  // Common aspect ratios and their decimal values
+  const commonRatios = [
+    { format: '3:2', value: 3 / 2 }, // 1.5 - DSLRs
+    { format: '4:3', value: 4 / 3 }, // 1.333... - Micro Four Thirds, phones
+    { format: '16:9', value: 16 / 9 }, // 1.777... - Video/cinema
+    { format: '5:4', value: 5 / 4 }, // 1.25 - Some medium format
+    { format: '1:1', value: 1 }, // 1.0 - Square format
+  ];
+
+  // Find the closest match
+  let closestRatio = commonRatios[0];
+  let smallestDiff = Math.abs(ratio - closestRatio.value);
+
+  for (const r of commonRatios) {
+    const diff = Math.abs(ratio - r.value);
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestRatio = r;
+    }
+  }
+
+  // If the difference is too large (> 0.05), default to 3:2 for DSLRs or 4:3 for others
+  if (smallestDiff > 0.05) {
+    // Check if it's closer to 3:2 or 4:3
+    return Math.abs(ratio - 1.5) < Math.abs(ratio - 1.333) ? '3:2' : '4:3';
+  }
+
+  return closestRatio.format;
+}
+
+/**
  * Calculate the horizontal angle of view for a given focal length and sensor width.
  * @param focalLength
  * @param focalLengthIn35mm - 35mm equivalent focal length.
+ * @param aspectRatio - Optional aspect ratio in the format "width:height". If not provided, defaults to "4:3".
  */
 export function calculateAngleOfView(
   focalLength: number,
   focalLengthIn35mm?: number | null,
+  aspectRatio?: string,
 ) {
   // Calculate the sensor width on 35mm focal length equivalent if available
   // Otherwise, use the actual focal length
   const { width } = calculateSensorSize(
     focalLengthIn35mm ?? focalLength,
     focalLength,
+    aspectRatio,
   );
 
   const fov = 2 * Math.atan(width / (2 * focalLength));
   const fovDegrees = fov * (180 / Math.PI);
 
   return fovDegrees ? parseFloat(fovDegrees.toFixed(4)) : null;
+}
+
+/**
+ * Calculate both horizontal and vertical angles of view.
+ * @param focalLength
+ * @param focalLengthIn35mm - 35mm equivalent focal length.
+ * @param aspectRatio - Optional aspect ratio in the format "width:height". If not provided, defaults to "4:3".
+ * @returns Object with horizontal and vertical FOV in degrees
+ */
+export function calculateAnglesOfView(
+  focalLength: number,
+  focalLengthIn35mm?: number | null,
+  aspectRatio?: string,
+): { horizontal: number | null; vertical: number | null } {
+  // Calculate the sensor dimensions on 35mm focal length equivalent if available
+  const { width, height } = calculateSensorSize(
+    focalLengthIn35mm ?? focalLength,
+    focalLength,
+    aspectRatio,
+  );
+
+  const horizontalFov = 2 * Math.atan(width / (2 * focalLength));
+  const verticalFov = 2 * Math.atan(height / (2 * focalLength));
+
+  const horizontalDegrees = horizontalFov * (180 / Math.PI);
+  const verticalDegrees = verticalFov * (180 / Math.PI);
+
+  return {
+    horizontal: horizontalDegrees
+      ? parseFloat(horizontalDegrees.toFixed(4))
+      : null,
+    vertical: verticalDegrees ? parseFloat(verticalDegrees.toFixed(4)) : null,
+  };
 }
 
 /**
