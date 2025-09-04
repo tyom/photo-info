@@ -11,7 +11,7 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "hono": "^4.6.14",
+    "hono": "^4.9.6",
     "photo-info": "workspace:*"
   },
   "devDependencies": {
