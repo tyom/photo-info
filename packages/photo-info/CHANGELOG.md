@@ -1,5 +1,11 @@
 # photo-info
 
+## 0.4.1
+
+### Patch Changes
+
+- 1323568: Update dependencies and fix audit issues
+
 ## 0.4.0
 
 ### Minor Changes
