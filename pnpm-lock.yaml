@@ -124,8 +124,8 @@ importers:
   packages/image-proxy:
     dependencies:
       hono:
-        specifier: ^4.6.14
-        version: 4.9.4
+        specifier: ^4.9.7
+        version: 4.9.7
       photo-info:
         specifier: workspace:*
         version: link:../photo-info
@@ -2633,8 +2633,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hono@4.9.4:
-    resolution: {integrity: sha512-61hl6MF6ojTl/8QSRu5ran6GXt+6zsngIUN95KzF5v5UjiX/xnrLR358BNRawwIRO49JwUqJqQe3Rb2v559R8Q==}
+  hono@4.9.7:
+    resolution: {integrity: sha512-t4Te6ERzIaC48W3x4hJmBwgNlLhmiEdEE5ViYb02ffw4ignHNHa5IBtPjmbKstmtKa8X6C35iWwK4HaqvrzG9w==}
     engines: {node: '>=16.9.0'}
 
   human-id@4.1.1:
@@ -6732,7 +6732,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.9.4: {}
+  hono@4.9.7: {}
 
   human-id@4.1.1: {}
 
