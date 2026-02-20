@@ -12,7 +12,7 @@
     "leaflet": "^1.9.4",
     "mode-watcher": "1.1.0",
     "photo-info": "workspace:*",
-    "svelte": "^5.38.5",
+    "svelte": "^5.51.5",
     "svelte-file-dropzone": "^2.0.9",
     "tailwindcss": "^4.1.12",
     "unplugin-icons": "^22.2.0"
